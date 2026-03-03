@@ -1,0 +1,93 @@
+package com.example.proyectoalexis.ui.navigation
+
+import android.R
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
+import com.example.proyectoalexis.ui.screens.LoginScreen
+import com.example.proyectoalexis.ui.screens.Registro
+import com.example.proyectoalexis.ui.screens.TableroPrincipal
+
+import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
+
+@SuppressLint("SuspiciousIndentation")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppNavigation(){
+    //Paso 1 Crear el Nav Controller
+    val navController = rememberNavController()
+
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(title = { Text("Texto de ejemplo") },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White
+                ),
+                    navigationIcon = { IconButton(onClick = {navController.popBackStack()}) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Flechita :)",
+                            tint = Color.White
+                        ) } }
+                )
+
+            }
+
+        ) { innerPading ->
+            Box(modifier = Modifier.padding(innerPading)){
+                //Paso 2 Crear el Nav Host donde estaran todos los destinos
+                NavHost(
+                    navController = navController, startDestination = Screens.Login.route
+                ){
+                    //Paso 3 Declarar las rutas de navegacion
+                    composable(route= Screens.Login.route){
+                        LoginScreen(
+                            navController
+                        )
+                    }
+
+                    composable(route= Screens.Registro.route){
+                        Registro(
+                           navController
+                        )
+                    }
+
+                    composable(route = Screens.TableroPrincipal.route) {
+                        TableroPrincipal(navController)
+                    }
+                }
+            }
+        }
+
+
+
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun Preview(){
+    ProyectoALexisTheme {
+        AppNavigation()
+    }
+
+}
