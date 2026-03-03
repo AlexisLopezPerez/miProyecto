@@ -78,7 +78,7 @@ fun TarjetaTarea(){
         )
     ) {
 
-            Box() {
+
                 Column(modifier = Modifier.padding(10.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -110,29 +110,21 @@ fun TarjetaTarea(){
                     }
                 }
 
-            }
-
-        }
-    Row(
-            modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.Top,
-    horizontalArrangement = Arrangement.End
-    ) {
-        DropdownMenu(
-            expanded = true,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuItem(
-                leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
-                text = { Text("Editar") },
-                onClick = { }
-            )
-            DropdownMenuItem(
-                leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
-                text = { Text("Eliminar") },
-                onClick = { }
-            )
-        }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
+                        text = { Text("Editar") },
+                        onClick = { }
+                    )
+                    DropdownMenuItem(
+                        leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
+                        text = { Text("Eliminar") },
+                        onClick = { }
+                    )
+                }
     }
 }
 
