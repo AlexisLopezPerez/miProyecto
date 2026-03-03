@@ -20,15 +20,19 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,45 +45,119 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.proyectoalexis.ui.navigation.Screens
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TableroPrincipal(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        TarjetaTarea()
-        TarjetaTarea()
-        TarjetaTarea()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-            Row(
-                modifier = Modifier.fillMaxSize().padding(20.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.Bottom
-                ) {
-                FloatingActionButton(
-                    onClick = {}
-                ) {
-                    Icon(Icons.Filled.Add, "" )
-                }
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                /* AQUI VA EL CONTENIDO DEL MENU */
+                Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(20.dp))
+                HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                NavigationDrawerItem(
+                    label = { Text( "Tareas" ) },
+                    selected = true,
+                    onClick = { /* ESTA EN ESA PANTALLA */ },
+                    icon = {Icon(Icons.Filled.Assignment, "")}
+                )
+                NavigationDrawerItem(
+                    label = { Text( "Equipos" ) },
+                    selected = false,
+                    onClick = { navController.navigate(Screens.Prueba.route) },
+                    icon = {Icon(Icons.Filled.Contacts, "")}
+                )
+                NavigationDrawerItem(
+                    label = { Text( "Perfil" ) },
+                    selected = false,
+                    onClick = { navController.navigate(Screens.DetallesPerfil.route) },
+                    icon = {Icon(Icons.Filled.AccountCircle, "")}
+                )
             }
+        }
+    ) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Tablero principal") },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White
+                ),
+                navigationIcon = {
+                    IconButton(onClick = { scope.launch {
+                        drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                    }
+                    )
+                    {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = "Flechita :)",
+                            tint = Color.White
+                        )
+                    }
+                },
 
 
+            )
 
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screens.Prueba.route) }
+            ) {
+                Icon(Icons.Filled.Add, "")
+            }
+        }
+
+    )
+    { innerPading ->
+        Box(modifier = Modifier.padding(innerPading)) {
+            Column(modifier = Modifier.fillMaxSize())
+            {
+                TarjetaTarea(navController)
+                TarjetaTarea(navController)
+                TarjetaTarea(navController)
+            }
+        }
+        }
+    }
     }
 
-}
-
-@Composable
-fun TarjetaTarea(){
-    var checked by remember() { mutableStateOf(false) }
-    var expanded by remember() { mutableStateOf(false) }
-    Card(
-        modifier = Modifier.padding(10.dp),
-        colors = CardDefaults.cardColors(
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
-    ) {
+    @Composable
+    fun TarjetaTarea(navController: NavController) {
+        var checked by remember() { mutableStateOf(false) }
+        var expanded by remember() { mutableStateOf(false) }
+        Card(
+            modifier = Modifier.padding(10.dp),
+            colors = CardDefaults.cardColors(
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        ) {
 
 
-                Column(modifier = Modifier.padding(10.dp)) {
+            Column(modifier = Modifier.padding(10.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -95,38 +173,40 @@ fun TarjetaTarea(){
                         )
                     }
 
-                    }
-                    Spacer(Modifier.height(10.dp))
-                    Text( "Equipos involucrados" )
-                    Spacer(Modifier.height(10.dp))
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween){
-                        Text( "Descripción" )
-                        Checkbox(
-                            checked = checked,
-                            onCheckedChange = { checked = it }
-                        )
-                    }
                 }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                Spacer(Modifier.height(10.dp))
+                Text("Equipos involucrados")
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    DropdownMenuItem(
-                        leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
-                        text = { Text("Editar") },
-                        onClick = { }
-                    )
-                    DropdownMenuItem(
-                        leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
-                        text = { Text("Eliminar") },
-                        onClick = { }
+                    Text("Descripción")
+                    Checkbox(
+                        checked = checked,
+                        onCheckedChange = { checked = it }
                     )
                 }
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
+                    text = { Text("Editar") },
+                    onClick = { navController.navigate(Screens.Prueba.route) }
+                )
+                DropdownMenuItem(
+                    leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
+                    text = { Text("Eliminar") },
+                    onClick = { navController.navigate(Screens.Prueba.route) }
+                )
+            }
+        }
     }
-}
 
 @Preview(showBackground = true)
 @Composable

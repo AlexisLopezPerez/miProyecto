@@ -24,8 +24,10 @@ import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.proyectoalexis.ui.screens.DetallesPerfil
 
 import com.example.proyectoalexis.ui.screens.LoginScreen
+import com.example.proyectoalexis.ui.screens.Prueba
 import com.example.proyectoalexis.ui.screens.Registro
 import com.example.proyectoalexis.ui.screens.TableroPrincipal
 
@@ -38,7 +40,7 @@ fun AppNavigation(){
     //Paso 1 Crear el Nav Controller
     val navController = rememberNavController()
 
-        Scaffold(
+        /*Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(title = { Text("Texto de ejemplo") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary,
@@ -53,8 +55,8 @@ fun AppNavigation(){
 
             }
 
-        ) { innerPading ->
-            Box(modifier = Modifier.padding(innerPading)){
+        ) { innerPading ->*/
+            Box(modifier = Modifier/*.padding(innerPading)*/){
                 //Paso 2 Crear el Nav Host donde estaran todos los destinos
                 NavHost(
                     navController = navController, startDestination = Screens.Login.route
@@ -75,13 +77,21 @@ fun AppNavigation(){
                     composable(route = Screens.TableroPrincipal.route) {
                         TableroPrincipal(navController)
                     }
+
+                    composable(route = Screens.DetallesPerfil.route){
+                        DetallesPerfil(navController)
+                    }
+
+                    composable(route = Screens.Prueba.route){
+                        Prueba(navController)
+                    }
                 }
             }
         }
 
 
 
-}
+//}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
