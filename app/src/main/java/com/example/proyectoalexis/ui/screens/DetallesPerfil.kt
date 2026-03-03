@@ -151,7 +151,7 @@ fun DetallesPerfil(navController: NavController) {
                     )
                     {
                         Button(
-                            onClick = {},
+                            onClick = { navController.navigate(Screens.EditarPerfil.route) },
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,
