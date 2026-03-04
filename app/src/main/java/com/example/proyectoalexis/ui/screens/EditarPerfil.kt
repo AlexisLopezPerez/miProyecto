@@ -30,13 +30,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,8 +55,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarPerfil(navController: NavController) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+
+    var username by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
 
         Scaffold(
@@ -92,10 +98,26 @@ fun EditarPerfil(navController: NavController) {
                 {
                     Icon(imageVector = Icons.Filled.AccountCircle, "",
                         Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp))
-                    Card() {
-                        Column(modifier = Modifier.padding(10.dp)) {
 
-                            Text(
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Nombre de usuario") }
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    OutlinedTextField(
+                        value = correo,
+                        onValueChange = { username = it },
+                        label = { Text("Correo") }
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Contraseña") }
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                          /*  Text(
                                 text = "Username: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
                             )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
@@ -103,20 +125,20 @@ fun EditarPerfil(navController: NavController) {
                                 text = "Correo: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
                             )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                            Text(
-                                text = "Contraseña: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
+                    Text(
+                        text = "Contraseña: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
+                    )*/
+
+
                     Spacer(Modifier.height(60.dp))
                     Row(
                         Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceAround
+                        horizontalArrangement = Arrangement.Center
                     )
                     {
                         Button(
-                            onClick = {},
+                            onClick = { navController.navigate(Screens.DetallesPerfil.route) },
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,
@@ -124,19 +146,9 @@ fun EditarPerfil(navController: NavController) {
                                 disabledContentColor = Color.White
                             )
                         ) {
-                            Text("Editar")
+                            Text("Aceptar")
                         }
-                        Button(
-                            onClick = {},
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = Color.White,
-                                disabledContainerColor = MaterialTheme.colorScheme.error,
-                                disabledContentColor = Color.White
-                            )
-                        ) {
-                            Text("Eliminar")
-                        }
+
                     }
                 }
             }

@@ -10,12 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
@@ -32,16 +36,23 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectoalexis.ui.navigation.Screens
@@ -53,6 +64,7 @@ import kotlinx.coroutines.launch
 fun DetallesPerfil(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val showDialog = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -120,13 +132,18 @@ fun DetallesPerfil(navController: NavController) {
             Box(modifier = Modifier.padding(innerPading))
             {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(40.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(40.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
                     Icon(imageVector = Icons.Filled.AccountCircle, "",
-                        Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp))
+                        Modifier
+                            .height(200.dp)
+                            .width(200.dp)
+                            .padding(bottom = 60.dp))
                     Card() {
                         Column(modifier = Modifier.padding(10.dp)) {
 
@@ -162,7 +179,9 @@ fun DetallesPerfil(navController: NavController) {
                             Text("Editar")
                         }
                         Button(
-                            onClick = {},
+                            onClick =
+                                { showDialog.value = true }
+                            ,
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.error,
                                 contentColor = Color.White,
@@ -174,10 +193,51 @@ fun DetallesPerfil(navController: NavController) {
                         }
                     }
                 }
+                if (showDialog.value) {
+                    AlertDialog(
+                        icon = {
+                            Icon(Icons.Filled.Info, contentDescription = "Example Icon")
+                        },
+                        title = {
+                            Text(text = "Eliminar Perfil")
+                        },
+                        text = {
+                            Text(text = "¿Esta seguro que desea eliminar su perfil de manera permanente?")
+                        },
+                        onDismissRequest = {
+                            showDialog.value = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    navController.navigate(Screens.Login.route)
+                                }
+                            ) {
+                                Text("Eliminar")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    showDialog.value = false
+                                }
+                            ) {
+                                Text("Cancelar")
+                            }
+                        }
+                    )
+                }
             }
         }
     }
 }
+
+
+
+
+
+
+
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
