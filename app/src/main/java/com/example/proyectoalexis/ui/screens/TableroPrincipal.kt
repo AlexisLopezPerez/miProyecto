@@ -83,7 +83,7 @@ fun TableroPrincipal(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text( "Equipos" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Prueba.route) },
+                    onClick = { navController.navigate(Screens.DetallesEquipo.route) },
                     icon = {Icon(Icons.Filled.Contacts, "")}
                 )
                 NavigationDrawerItem(

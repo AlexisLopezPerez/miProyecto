@@ -3,4 +3,6 @@
     <string name="username">Alexis</string>
     <string name="password">12345678</string>
     <string name="correo">alexis@email.com</string>
+    <string name="nombreEquipo">Proyecto Nexus</string>
+    <string name="descripcionEquipo">Equipo de trabajo dedicado a terminar el desarrollo del software Nexus</string>
 </resources>
