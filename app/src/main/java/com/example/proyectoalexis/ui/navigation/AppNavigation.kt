@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectoalexis.ui.screens.DetallesEquipo
 import com.example.proyectoalexis.ui.screens.DetallesPerfil
+import com.example.proyectoalexis.ui.screens.EditarEquipo
 import com.example.proyectoalexis.ui.screens.EditarPerfil
 
 import com.example.proyectoalexis.ui.screens.LoginScreen
@@ -90,6 +91,10 @@ fun AppNavigation(){
 
                     composable(route = Screens.EditarPerfil.route){
                         EditarPerfil(navController)
+                    }
+
+                    composable(route = Screens.EditarEquipo.route){
+                        EditarEquipo(navController)
                     }
 
                     composable(route = Screens.Prueba.route){
