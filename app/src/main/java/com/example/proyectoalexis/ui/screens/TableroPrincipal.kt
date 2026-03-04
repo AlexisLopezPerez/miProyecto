@@ -50,6 +50,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -90,6 +91,13 @@ fun TableroPrincipal(navController: NavController) {
                     selected = false,
                     onClick = { navController.navigate(Screens.DetallesPerfil.route) },
                     icon = {Icon(Icons.Filled.AccountCircle, "")}
+                )
+                HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                NavigationDrawerItem(
+                    label = { Text( "Cerrar Sesión" ) },
+                    selected = false,
+                    onClick = { navController.navigate(Screens.Login.route) },
+                    icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
         }

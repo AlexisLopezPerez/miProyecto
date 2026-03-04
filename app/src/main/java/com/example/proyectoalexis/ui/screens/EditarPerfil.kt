@@ -44,10 +44,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.proyectoalexis.R
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
@@ -56,9 +58,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditarPerfil(navController: NavController) {
 
-    var username by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val usernameString = stringResource(R.string.username)
+    val passwordString = stringResource(R.string.password)
+    val correoString = stringResource(R.string.correo)
+    var username by remember { mutableStateOf(usernameString) }
+    var correo by remember { mutableStateOf(correoString) }
+    var password by remember { mutableStateOf(passwordString) }
 
 
         Scaffold(
@@ -112,24 +117,10 @@ fun EditarPerfil(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
+                        value = password,
+                        onValueChange = { password = it },
                         label = { Text("Contraseña") }
                     )
-                    Spacer(modifier = Modifier.height(30.dp))
-                          /*  Text(
-                                text = "Username: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
-                            )
-                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                            Text(
-                                text = "Correo: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
-                            )
-                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                    Text(
-                        text = "Contraseña: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
-                    )*/
-
-
                     Spacer(Modifier.height(60.dp))
                     Row(
                         Modifier.fillMaxWidth(),

@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
+import com.example.proyectoalexis.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +68,9 @@ fun DetallesPerfil(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val showDialog = remember { mutableStateOf(false) }
+    val usernameString = stringResource(R.string.username)
+    val passwordString = stringResource(R.string.password)
+    val correoString = stringResource(R.string.correo)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -148,15 +154,15 @@ fun DetallesPerfil(navController: NavController) {
                         Column(modifier = Modifier.padding(10.dp)) {
 
                         Text(
-                            text = "Username: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
+                            text = "Username: $usernameString", style = MaterialTheme.typography.titleLarge
                         )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                         Text(
-                            text = "Correo: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
+                            text = "Correo: $correoString", style = MaterialTheme.typography.titleLarge
                         )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                         Text(
-                            text = "Contraseña: Texto de ejemplo", style = MaterialTheme.typography.titleLarge
+                            text = "Contraseña: $passwordString", style = MaterialTheme.typography.titleLarge
                         )
                         }
                     }
