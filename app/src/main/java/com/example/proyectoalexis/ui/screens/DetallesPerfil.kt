@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -92,7 +93,7 @@ fun DetallesPerfil(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text("Equipos") },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Prueba.route) },
+                    onClick = { navController.navigate(Screens.Equipos.route) },
                     icon = { Icon(Icons.Filled.Contacts, "") }
                 )
                 NavigationDrawerItem(
@@ -100,6 +101,13 @@ fun DetallesPerfil(navController: NavController) {
                     selected = true,
                     onClick = { /* ESTA EN ESA PANTALLA */ },
                     icon = { Icon(Icons.Filled.AccountCircle, "") }
+                )
+                HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                NavigationDrawerItem(
+                    label = { Text( "Cerrar Sesión" ) },
+                    selected = false,
+                    onClick = { navController.navigate(Screens.Login.route) },
+                    icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
         }

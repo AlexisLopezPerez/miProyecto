@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
@@ -50,21 +51,29 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
+import com.example.proyectoalexis.R
 import com.example.proyectoalexis.ui.navigation.Screens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TableroPrincipal(navController: NavController) {
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val showDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
@@ -83,7 +92,7 @@ fun TableroPrincipal(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text( "Equipos" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.DetallesEquipo.route) },
+                    onClick = { navController.navigate(Screens.Equipos.route) },
                     icon = {Icon(Icons.Filled.Contacts, "")}
                 )
                 NavigationDrawerItem(
@@ -133,7 +142,7 @@ fun TableroPrincipal(navController: NavController) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate(Screens.Prueba.route) }
+                onClick = { navController.navigate(Screens.CrearTarea.route) }
             ) {
                 Icon(Icons.Filled.Add, "")
             }
@@ -144,9 +153,12 @@ fun TableroPrincipal(navController: NavController) {
         Box(modifier = Modifier.padding(innerPading)) {
             Column(modifier = Modifier.fillMaxSize())
             {
-                TarjetaTarea(navController)
-                TarjetaTarea(navController)
-                TarjetaTarea(navController)
+                TarjetaTarea(navController, showDialog)
+                TarjetaTarea(navController, showDialog)
+                TarjetaTarea(navController, showDialog)
+            }
+            if (showDialog.value) {
+                CuadroEliminar(navController, showDialog)
             }
         }
         }
@@ -154,67 +166,117 @@ fun TableroPrincipal(navController: NavController) {
     }
 
     @Composable
-    fun TarjetaTarea(navController: NavController) {
+    fun TarjetaTarea(navController: NavController, showDialog: MutableState<Boolean>) {
         var checked by remember() { mutableStateOf(false) }
         var expanded by remember() { mutableStateOf(false) }
-        Card(
-            modifier = Modifier.padding(10.dp),
-            colors = CardDefaults.cardColors(
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+
+            Card(
+                modifier = Modifier.padding(10.dp),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
-        ) {
+            {
 
-
-            Column(modifier = Modifier.padding(10.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Nombre de la tarea", style = MaterialTheme.typography.titleLarge)
-                    IconButton(
-                        onClick = { expanded = !expanded }
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = ""
+                        Text(text = "Tarea 1", style = MaterialTheme.typography.titleLarge)
+                        IconButton(
+                            onClick = { expanded = !expanded }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = ""
+                            )
+                        }
+
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Text(text = stringResource(R.string.nombreEquipo))
+                    Spacer(Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.descripcionEquipo),
+                            modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
+                        )
+                        Checkbox(
+                            checked = checked,
+                            onCheckedChange = { checked = it }
                         )
                     }
+                }
 
-                }
-                Spacer(Modifier.height(10.dp))
-                Text("Equipos involucrados")
-                Spacer(Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Descripción")
-                    Checkbox(
-                        checked = checked,
-                        onCheckedChange = { checked = it }
-                    )
-                }
+
             }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        )
+        {
+            DropdownMenuItem(
+                leadingIcon = { Icon(imageVector = Icons.Filled.Info, "") },
+                text = { Text("Detalles") },
+                onClick = { navController.navigate(Screens.DetallesTarea.route) }
+            )
+            DropdownMenuItem(
+                leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
+                text = { Text("Editar") },
+                onClick = { navController.navigate(Screens.EditarTarea.route) }
+            )
+            DropdownMenuItem(
+                leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
+                text = { Text("Eliminar") },
+                onClick = { showDialog.value = true }
+            )
+        }
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+    }
+
+@Composable
+private fun CuadroEliminar(navController: NavController, showDialog: MutableState<Boolean>){
+    AlertDialog(
+        icon = {
+            Icon(Icons.Filled.Info, contentDescription = "Example Icon")
+        },
+        title = {
+            Text(text = "Eliminar Tarea")
+        },
+        text = {
+            Text(text = "¿Esta seguro que desea eliminar esta tarea de manera permanente?")
+        },
+        onDismissRequest = {
+            showDialog.value = false
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showDialog.value = false
+                    /*  CODIGO QUE ELIMINA LA TAREA */
+                }
             ) {
-                DropdownMenuItem(
-                    leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
-                    text = { Text("Editar") },
-                    onClick = { navController.navigate(Screens.Prueba.route) }
-                )
-                DropdownMenuItem(
-                    leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
-                    text = { Text("Eliminar") },
-                    onClick = { navController.navigate(Screens.Prueba.route) }
-                )
+                Text("Eliminar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    showDialog.value = false
+                }
+            ) {
+                Text("Cancelar")
             }
         }
-    }
+    )
+}
 
 @Preview(showBackground = true)
 @Composable

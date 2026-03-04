@@ -24,10 +24,15 @@ import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.proyectoalexis.ui.screens.CrearEquipo
+import com.example.proyectoalexis.ui.screens.CrearTarea
 import com.example.proyectoalexis.ui.screens.DetallesEquipo
 import com.example.proyectoalexis.ui.screens.DetallesPerfil
+import com.example.proyectoalexis.ui.screens.DetallesTarea
 import com.example.proyectoalexis.ui.screens.EditarEquipo
 import com.example.proyectoalexis.ui.screens.EditarPerfil
+import com.example.proyectoalexis.ui.screens.EditarTarea
+import com.example.proyectoalexis.ui.screens.Equipos
 
 import com.example.proyectoalexis.ui.screens.LoginScreen
 import com.example.proyectoalexis.ui.screens.Prueba
@@ -77,6 +82,10 @@ fun AppNavigation(){
                         )
                     }
 
+                    composable(route = Screens.Equipos.route){
+                        Equipos(navController)
+                    }
+
                     composable(route = Screens.TableroPrincipal.route) {
                         TableroPrincipal(navController)
                     }
@@ -89,12 +98,28 @@ fun AppNavigation(){
                         DetallesEquipo(navController)
                     }
 
+                    composable(route = Screens.DetallesTarea.route){
+                        DetallesTarea(navController)
+                    }
+
                     composable(route = Screens.EditarPerfil.route){
                         EditarPerfil(navController)
                     }
 
                     composable(route = Screens.EditarEquipo.route){
                         EditarEquipo(navController)
+                    }
+
+                    composable(route = Screens.EditarTarea.route){
+                        EditarTarea(navController)
+                    }
+
+                    composable(route = Screens.CrearEquipo.route){
+                        CrearEquipo(navController)
+                    }
+
+                    composable(route = Screens.CrearTarea.route){
+                        CrearTarea(navController)
                     }
 
                     composable(route = Screens.Prueba.route){

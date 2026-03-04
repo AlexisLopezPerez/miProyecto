@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,9 +19,13 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -67,50 +72,15 @@ import com.example.proyectoalexis.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetallesEquipo(navController: NavController) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    val showDialog = remember { mutableStateOf(false) }
+fun DetallesTarea(navController: NavController) {
+
     val nombreEquipoString = stringResource(R.string.nombreEquipo)
     val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                /* AQUI VA EL CONTENIDO DEL MENU */
-                Text(
-                    "Menú",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(20.dp)
-                )
-                HorizontalDivider(Modifier.padding(vertical = 8.dp))
-                NavigationDrawerItem(
-                    label = { Text("Tareas") },
-                    selected = false,
-                    onClick = { navController.navigate(Screens.TableroPrincipal.route) },
-                    icon = { Icon(Icons.Filled.Assignment, "") }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Equipos") },
-                    selected = false,
-                    onClick = { navController.navigate(Screens.Prueba.route) },
-                    icon = { Icon(Icons.Filled.Contacts, "") }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Perfil") },
-                    selected = true,
-                    onClick = { /* ESTA EN ESA PANTALLA */ },
-                    icon = { Icon(Icons.Filled.AccountCircle, "") }
-                )
-            }
-        }
-    )
-    {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Detalles del equipo") },
+                    title = { Text("Detalles de la tarea") },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         titleContentColor = Color.White
@@ -144,16 +114,15 @@ fun DetallesEquipo(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Icon(imageVector = Icons.Filled.AccountCircle, "",
-                        Modifier
-                            .height(200.dp)
-                            .width(200.dp)
-                            .padding(bottom = 60.dp))
                     Card() {
                         Column(modifier = Modifier.padding(10.dp)) {
 
                             Text(
-                                text = "Nombre del equipo:", style = MaterialTheme.typography.titleLarge
+                                text = "Tarea 1", style = MaterialTheme.typography.titleLarge
+                            )
+                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
+                            Text(
+                                text = "Equipo:", style = MaterialTheme.typography.titleLarge
                             )
                             Text(
                                 text = nombreEquipoString
@@ -169,35 +138,39 @@ fun DetallesEquipo(navController: NavController) {
                         }
                     }
                     Spacer(Modifier.height(20.dp))
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceAround
-                    )
+                    Card()
                     {
-                        Button(
-                            onClick = { navController.navigate(Screens.EditarEquipo.route) },
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = Color.White,
-                                disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                disabledContentColor = Color.White
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             )
-                        ) {
-                            Text("Editar")
-                        }
-                        Button(
-                            onClick =
-                                { showDialog.value = true }
-                            ,
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = Color.White,
-                                disabledContainerColor = MaterialTheme.colorScheme.error,
-                                disabledContentColor = Color.White
-                            )
-                        ) {
-                            Text("Eliminar")
+                            {
+                                TextButton(
+                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    modifier = Modifier.widthIn(min = 50.dp, max = 300.dp)
+                                ) 
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Image, ""
+                                    )
+                                    Text(
+                                        text = "IMG_20260227_203157.jpg"
+                                    )
+                                }
+                                IconButton(
+                                    onClick = { navController.navigate(Screens.Prueba.route) }
+                                ) 
+                                {
+                                    Icon( 
+                                        imageVector = Icons.Filled.Download, ""
+                                    )
+                                }
+
+                            }
+                            
+
                         }
                     }
                     Spacer(Modifier.height(20.dp))
@@ -209,120 +182,55 @@ fun DetallesEquipo(navController: NavController) {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ){
-                                Text(
-                                    text = "Integrantes:", style = MaterialTheme.typography.titleLarge
-                                )
-                                IconButton(
-                                    onClick = {}
+                                TextButton(
+                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Icon(imageVector = Icons.Filled.Add, "")
+                                    Icon(
+                                        imageVector = Icons.Filled.AttachFile, ""
+                                    )
+                                    Text(
+                                        text = "Agregar archivo"
+                                    )
                                 }
+
                             }
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                Text(
-                                    text = "Alexis"
-                                )
-                                IconButton(
-                                    onClick = {}
+                            ){
+                                TextButton(
+                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Icon(imageVector = Icons.Filled.Delete, "")
+                                    Icon(
+                                        imageVector = Icons.Filled.Notifications, ""
+                                    )
+                                    Text(
+                                        text = "Recordarme"
+                                    )
                                 }
+
                             }
-                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                Text(
-                                    text = "Persona 1"
-                                )
-                                IconButton(
-                                    onClick = {}
-                                ) {
-                                    Icon(imageVector = Icons.Filled.Delete, "")
-                                }
-                            }
-                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                Text(
-                                    text = "Persona 2"
-                                )
-                                IconButton(
-                                    onClick = {}
-                                ) {
-                                    Icon(imageVector = Icons.Filled.Delete, "")
-                                }
-                            }
+
                         }
                     }
-                    Spacer(Modifier.height(60.dp))
+                    
 
                 }
-                if (showDialog.value) {
-                    CuadroEliminar(navController, showDialog)
-                }
+
             }
         }
-    }
+
 }
-
-@Composable
-private fun CuadroEliminar(navController: NavController, showDialog: MutableState<Boolean>){
-    AlertDialog(
-        icon = {
-            Icon(Icons.Filled.Info, contentDescription = "Example Icon")
-        },
-        title = {
-            Text(text = "Eliminar Equipo")
-        },
-        text = {
-            Text(text = "¿Esta seguro que desea eliminar este equipo de manera permanente?")
-        },
-        onDismissRequest = {
-            showDialog.value = false
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    navController.navigate(Screens.Equipos.route)
-                }
-            ) {
-                Text("Eliminar")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    showDialog.value = false
-                }
-            ) {
-                Text("Cancelar")
-            }
-        }
-    )
-}
-
-
-
 
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
     val navControllerLocal = rememberNavController()
     ProyectoALexisTheme{
-        DetallesEquipo(navControllerLocal)
+        DetallesTarea(navControllerLocal)
     }
 }
