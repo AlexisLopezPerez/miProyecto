@@ -63,7 +63,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CrearTarea(navController: NavController) {
+fun CrearTarea(
+    onGoBack: () -> Unit,
+    onTableroPrincipal: () -> Unit
+) {
 
     var nombreTarea by remember { mutableStateOf("") }
     var descripcionTarea by remember { mutableStateOf("") }
@@ -79,9 +82,8 @@ fun CrearTarea(navController: NavController) {
                     titleContentColor = Color.White
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }
+                    IconButton(onClick = onGoBack
+
                     )
                     {
                         Icon(
@@ -132,7 +134,7 @@ fun CrearTarea(navController: NavController) {
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             TextButton(
-                                onClick = { navController.navigate(Screens.Prueba.route) },
+                                onClick = {  },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
@@ -154,7 +156,7 @@ fun CrearTarea(navController: NavController) {
                 )
                 {
                     Button(
-                        onClick = { navController.navigate(Screens.TableroPrincipal.route) },
+                        onClick = onTableroPrincipal,
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -177,6 +179,6 @@ fun CrearTarea(navController: NavController) {
 private fun Preview(){
     val navControllerLocal = rememberNavController()
     ProyectoALexisTheme{
-        CrearTarea(navControllerLocal)
+        CrearTarea({},{})
     }
 }

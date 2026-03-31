@@ -52,7 +52,7 @@ import com.example.proyectoalexis.ui.theme.backgroundDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(onTableroPrincipal: () -> Unit, onRegistro: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -103,7 +103,7 @@ fun LoginScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 OutlinedButton(
-                    onClick = { navController.navigate(Screens.TableroPrincipal.route) },
+                    onClick = onTableroPrincipal,
                     border = BorderStroke(1.dp, Color.White)
                 ) {
                     Text(
@@ -114,13 +114,13 @@ fun LoginScreen(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(40.dp))
                 TextButton(
-                    onClick = { navController.navigate(Screens.Registro.route) },
+                    onClick = onRegistro,
                 ) { Text(text = "No tengo una cuenta", color = Color.White) }
             }
         }
     }
 }
-
+/*
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview(){
@@ -128,4 +128,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         LoginScreen(navControllerLocal)
     }
-}
+}*/

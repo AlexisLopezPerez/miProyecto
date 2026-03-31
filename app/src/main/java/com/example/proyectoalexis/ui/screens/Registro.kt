@@ -39,7 +39,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Registro(navController: NavController) {
+fun Registro(
+    onGoBack: () -> Unit,
+    onLogin: () -> Unit,
+) {
     var username by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -54,7 +57,7 @@ fun Registro(navController: NavController) {
                     titleContentColor = Color.White
                 ),
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = onGoBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Flechita :)",
@@ -99,17 +102,17 @@ fun Registro(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(30.dp))
                 Button(
-                    onClick = { navController.navigate(Screens.Login.route) }
+                    onClick = onLogin
                 ) { Text("Registrarse") }
                 Spacer(modifier = Modifier.height(10.dp))
                 TextButton(
-                    onClick = { navController.navigate(Screens.Login.route) },
+                    onClick = onLogin,
                 ) { Text(text = "Ya tengo una cuenta") }
             }
         }
     }
 }
-
+/*
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview(){
@@ -117,4 +120,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         Registro(navControllerLocal)
     }
-}
+}*/

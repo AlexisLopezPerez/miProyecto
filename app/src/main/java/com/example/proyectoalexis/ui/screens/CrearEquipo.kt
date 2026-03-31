@@ -56,7 +56,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CrearEquipo(navController: NavController) {
+fun CrearEquipo(
+    onGoBack: () -> Unit
+) {
 
     var nombreEquipo by remember { mutableStateOf("") }
     var descripcionEquipo by remember { mutableStateOf("") }
@@ -71,9 +73,8 @@ fun CrearEquipo(navController: NavController) {
                     titleContentColor = Color.White
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }
+                    IconButton(onClick = onGoBack
+
                     )
                     {
                         Icon(
@@ -119,7 +120,7 @@ fun CrearEquipo(navController: NavController) {
                 )
                 {
                     Button(
-                        onClick = { navController.popBackStack() },
+                        onClick = onGoBack,
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -142,6 +143,6 @@ fun CrearEquipo(navController: NavController) {
 private fun Preview(){
     val navControllerLocal = rememberNavController()
     ProyectoALexisTheme{
-        CrearEquipo(navControllerLocal)
+        CrearEquipo({})
     }
 }

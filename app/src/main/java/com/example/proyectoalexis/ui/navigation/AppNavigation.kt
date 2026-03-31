@@ -72,13 +72,15 @@ fun AppNavigation(){
                     //Paso 3 Declarar las rutas de navegacion
                     composable(route= Screens.Login.route){
                         LoginScreen(
-                            navController
+                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onRegistro = {navController.navigate(Screens.Registro.route)}
                         )
                     }
 
                     composable(route= Screens.Registro.route){
                         Registro(
-                           navController
+                           onGoBack = {navController.popBackStack()},
+                            onLogin = {navController.navigate(Screens.Login.route)}
                         )
                     }
 
@@ -87,7 +89,14 @@ fun AppNavigation(){
                     }
 
                     composable(route = Screens.TableroPrincipal.route) {
-                        TableroPrincipal(navController)
+                        TableroPrincipal(
+                            onLogin = {navController.navigate(Screens.Login.route)},
+                            onEquipos = {navController.navigate(Screens.Equipos.route)},
+                            onCrearTarea = {navController.navigate(Screens.CrearTarea.route)},
+                            onEditarTarea = {navController.navigate(Screens.EditarTarea.route)},
+                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
+                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)}
+                        )
                     }
 
                     composable(route = Screens.DetallesPerfil.route){
@@ -95,7 +104,12 @@ fun AppNavigation(){
                     }
 
                     composable(route = Screens.DetallesEquipo.route){
-                        DetallesEquipo(navController)
+                        DetallesEquipo(
+                            onEquipos = {navController.navigate(Screens.Equipos.route)},
+                            onGoBack = {navController.popBackStack()},
+                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onEditarEquipo = { navController.navigate(Screens.EditarEquipo.route) }
+                        )
                     }
 
                     composable(route = Screens.DetallesTarea.route){
@@ -115,11 +129,16 @@ fun AppNavigation(){
                     }
 
                     composable(route = Screens.CrearEquipo.route){
-                        CrearEquipo(navController)
+                        CrearEquipo(
+                            onGoBack = {navController.popBackStack()}
+                        )
                     }
 
                     composable(route = Screens.CrearTarea.route){
-                        CrearTarea(navController)
+                        CrearTarea(
+                            onGoBack = {navController.popBackStack()},
+                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)}
+                        )
                     }
 
                     composable(route = Screens.Prueba.route){

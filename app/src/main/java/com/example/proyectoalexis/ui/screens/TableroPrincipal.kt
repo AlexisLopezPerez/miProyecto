@@ -74,7 +74,14 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableroPrincipal(navController: NavController) {
+fun TableroPrincipal(
+    onEquipos: () -> Unit,
+    onDetallesPerfil: () -> Unit,
+    onLogin: () -> Unit,
+    onCrearTarea: () -> Unit,
+    onDetallesTarea: () -> Unit,
+    onEditarTarea: () -> Unit
+) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val showDialog = remember { mutableStateOf(false) }
@@ -100,20 +107,20 @@ fun TableroPrincipal(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text( "Equipos" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Equipos.route) },
+                    onClick = onEquipos,
                     icon = {Icon(Icons.Filled.Contacts, "")}
                 )
                 NavigationDrawerItem(
                     label = { Text( "Perfil" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.DetallesPerfil.route) },
+                    onClick = onDetallesPerfil,
                     icon = {Icon(Icons.Filled.AccountCircle, "")}
                 )
                 HorizontalDivider(Modifier.padding(vertical = 8.dp))
                 NavigationDrawerItem(
                     label = { Text( "Cerrar Sesión" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Login.route) },
+                    onClick = onLogin,
                     icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
@@ -150,7 +157,7 @@ fun TableroPrincipal(navController: NavController) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate(Screens.CrearTarea.route) }
+                onClick = onCrearTarea
             ) {
                 Icon(Icons.Filled.Add, "")
             }
@@ -162,12 +169,12 @@ fun TableroPrincipal(navController: NavController) {
         Box(modifier = Modifier.padding(innerPading)) {
             Column(modifier = Modifier.fillMaxSize())
             {
-                TarjetaTarea(navController, showBottomSheet)
-                TarjetaTarea(navController, showBottomSheet)
-                TarjetaTarea(navController, showBottomSheet)
+                TarjetaTarea(showBottomSheet)
+                TarjetaTarea(showBottomSheet)
+                TarjetaTarea(showBottomSheet)
             }
             if (showDialog.value) {
-                CuadroEliminar(navController, showDialog)
+                CuadroEliminar(showDialog)
             }
 
             if(showBottomSheet.value){
@@ -182,7 +189,7 @@ fun TableroPrincipal(navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally)
                     {
                         TextButton(
-                            onClick = {navController.navigate(Screens.DetallesTarea.route)}
+                            onClick = onDetallesTarea
                         )
                         {
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
@@ -193,7 +200,7 @@ fun TableroPrincipal(navController: NavController) {
                             }
                         }
                         TextButton(
-                            onClick = {navController.navigate(Screens.EditarTarea.route)}
+                            onClick = onEditarTarea
                         )
                         {
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
@@ -226,9 +233,8 @@ fun TableroPrincipal(navController: NavController) {
     }
 
     @Composable
-    fun TarjetaTarea(navController: NavController, showBottomSheet: MutableState<Boolean> ) {
+    fun TarjetaTarea(showBottomSheet: MutableState<Boolean> ) {
         var checked by remember() { mutableStateOf(false) }
-        var expanded by remember() { mutableStateOf(false) }
 
 
             Card(
@@ -280,32 +286,10 @@ fun TableroPrincipal(navController: NavController) {
 
 
             }
-        /*DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        )
-        {
-            DropdownMenuItem(
-                leadingIcon = { Icon(imageVector = Icons.Filled.Info, "") },
-                text = { Text("Detalles") },
-                onClick = { navController.navigate(Screens.DetallesTarea.route) }
-            )
-            DropdownMenuItem(
-                leadingIcon = { Icon(imageVector = Icons.Filled.Create, "") },
-                text = { Text("Editar") },
-                onClick = { navController.navigate(Screens.EditarTarea.route) }
-            )
-            DropdownMenuItem(
-                leadingIcon = { Icon(imageVector = Icons.Filled.Delete, "") },
-                text = { Text("Eliminar") },
-                onClick = { showDialog.value = true }
-            )
-        }*/
-
     }
 
 @Composable
-private fun CuadroEliminar(navController: NavController, showDialog: MutableState<Boolean>){
+private fun CuadroEliminar(showDialog: MutableState<Boolean>){
     AlertDialog(
         icon = {
             Icon(Icons.Filled.Info, contentDescription = "Example Icon")
@@ -341,6 +325,7 @@ private fun CuadroEliminar(navController: NavController, showDialog: MutableStat
     )
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -349,3 +334,4 @@ private fun Preview(){
         TableroPrincipal(navControllerLocal)
     }
 }
+*/

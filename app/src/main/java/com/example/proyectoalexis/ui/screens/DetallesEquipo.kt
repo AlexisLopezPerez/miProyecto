@@ -67,7 +67,12 @@ import com.example.proyectoalexis.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetallesEquipo(navController: NavController) {
+fun DetallesEquipo(
+    onTableroPrincipal: () -> Unit,
+    onGoBack: () -> Unit,
+    onEditarEquipo: () -> Unit,
+    onEquipos: () -> Unit,
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val showDialog = remember { mutableStateOf(false) }
@@ -88,13 +93,13 @@ fun DetallesEquipo(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text("Tareas") },
                     selected = false,
-                    onClick = { navController.navigate(Screens.TableroPrincipal.route) },
+                    onClick = onTableroPrincipal,
                     icon = { Icon(Icons.Filled.Assignment, "") }
                 )
                 NavigationDrawerItem(
                     label = { Text("Equipos") },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Prueba.route) },
+                    onClick = {  },
                     icon = { Icon(Icons.Filled.Contacts, "") }
                 )
                 NavigationDrawerItem(
@@ -116,10 +121,7 @@ fun DetallesEquipo(navController: NavController) {
                         titleContentColor = Color.White
                     ),
                     navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }
-                        )
+                        IconButton(onClick = onGoBack)
                         {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -176,7 +178,7 @@ fun DetallesEquipo(navController: NavController) {
                     )
                     {
                         Button(
-                            onClick = { navController.navigate(Screens.EditarEquipo.route) },
+                            onClick = onEditarEquipo,
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,
@@ -272,7 +274,7 @@ fun DetallesEquipo(navController: NavController) {
 
                 }
                 if (showDialog.value) {
-                    CuadroEliminar(navController, showDialog)
+                    CuadroEliminar(onEquipos, showDialog)
                 }
             }
         }
@@ -280,7 +282,7 @@ fun DetallesEquipo(navController: NavController) {
 }
 
 @Composable
-private fun CuadroEliminar(navController: NavController, showDialog: MutableState<Boolean>){
+private fun CuadroEliminar(onEquipos: () -> Unit, showDialog: MutableState<Boolean>){
     AlertDialog(
         icon = {
             Icon(Icons.Filled.Info, contentDescription = "Example Icon")
@@ -296,10 +298,7 @@ private fun CuadroEliminar(navController: NavController, showDialog: MutableStat
         },
         confirmButton = {
             TextButton(
-                onClick = {
-                    navController.navigate(Screens.Equipos.route)
-                }
-            ) {
+                onClick = onEquipos) {
                 Text("Eliminar")
             }
         },
@@ -317,12 +316,12 @@ private fun CuadroEliminar(navController: NavController, showDialog: MutableStat
 
 
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
     val navControllerLocal = rememberNavController()
     ProyectoALexisTheme{
-        DetallesEquipo(navControllerLocal)
+        DetallesEquipo()
     }
-}
+}*/
