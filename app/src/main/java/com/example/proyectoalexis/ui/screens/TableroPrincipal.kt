@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log.d
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -39,7 +41,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,13 +57,16 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.ui.navigation.Screens
@@ -75,6 +79,10 @@ fun TableroPrincipal(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val showDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    var showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -150,15 +158,67 @@ fun TableroPrincipal(navController: NavController) {
 
     )
     { innerPading ->
+
         Box(modifier = Modifier.padding(innerPading)) {
             Column(modifier = Modifier.fillMaxSize())
             {
-                TarjetaTarea(navController, showDialog)
-                TarjetaTarea(navController, showDialog)
-                TarjetaTarea(navController, showDialog)
+                TarjetaTarea(navController, showBottomSheet)
+                TarjetaTarea(navController, showBottomSheet)
+                TarjetaTarea(navController, showBottomSheet)
             }
             if (showDialog.value) {
                 CuadroEliminar(navController, showDialog)
+            }
+
+            if(showBottomSheet.value){
+                ModalBottomSheet(
+                    modifier = Modifier.fillMaxHeight(),
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet.value = false }
+                )
+                {
+                    Column(modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally)
+                    {
+                        TextButton(
+                            onClick = {navController.navigate(Screens.DetallesTarea.route)}
+                        )
+                        {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Icon(imageVector = Icons.Filled.Info, "")
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text("Detalles")
+                            }
+                        }
+                        TextButton(
+                            onClick = {navController.navigate(Screens.EditarTarea.route)}
+                        )
+                        {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Icon(imageVector = Icons.Filled.Create, "")
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text("Editar")
+                            }
+                        }
+                        TextButton(
+                            onClick = {
+                                showDialog.value = true
+                            }
+                        )
+                        {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Icon(imageVector = Icons.Filled.Delete, "")
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text("Eliminar")
+                            }
+                        }
+
+                    }
+                }
             }
         }
         }
@@ -166,7 +226,7 @@ fun TableroPrincipal(navController: NavController) {
     }
 
     @Composable
-    fun TarjetaTarea(navController: NavController, showDialog: MutableState<Boolean>) {
+    fun TarjetaTarea(navController: NavController, showBottomSheet: MutableState<Boolean> ) {
         var checked by remember() { mutableStateOf(false) }
         var expanded by remember() { mutableStateOf(false) }
 
@@ -187,7 +247,10 @@ fun TableroPrincipal(navController: NavController) {
                     ) {
                         Text(text = "Tarea 1", style = MaterialTheme.typography.titleLarge)
                         IconButton(
-                            onClick = { expanded = !expanded }
+                            onClick = {
+                                showBottomSheet.value = true
+                                d("Boton Menu","Se esta intentando mostrar el menu")
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.MoreVert,
@@ -217,7 +280,7 @@ fun TableroPrincipal(navController: NavController) {
 
 
             }
-        DropdownMenu(
+        /*DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         )
@@ -237,7 +300,7 @@ fun TableroPrincipal(navController: NavController) {
                 text = { Text("Eliminar") },
                 onClick = { showDialog.value = true }
             )
-        }
+        }*/
 
     }
 

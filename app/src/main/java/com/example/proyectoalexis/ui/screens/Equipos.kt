@@ -53,6 +53,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -166,7 +168,8 @@ fun TarjetaEquipo(navController: NavController) {
     var expanded by remember() { mutableStateOf(false) }
 
     TextButton(
-        onClick = { navController.navigate(Screens.DetallesEquipo.route) }
+        onClick = { navController.navigate(Screens.DetallesEquipo.route) },
+        shape = RectangleShape
     )
     {
         Card(
