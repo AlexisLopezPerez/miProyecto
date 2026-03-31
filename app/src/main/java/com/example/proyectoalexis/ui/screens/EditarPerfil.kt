@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +59,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarPerfil(navController: NavController) {
+fun EditarPerfil(
+    onGoBack: () -> Unit,
+    onDetallesPerfil: () -> Unit
+) {
 
     val usernameString = stringResource(R.string.username)
     val passwordString = stringResource(R.string.password)
@@ -75,10 +81,7 @@ fun EditarPerfil(navController: NavController) {
                         titleContentColor = Color.White
                     ),
                     navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }
-                        )
+                        IconButton(onClick = onGoBack)
                         {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -101,8 +104,12 @@ fun EditarPerfil(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Icon(imageVector = Icons.Filled.AccountCircle, "",
-                        Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp))
+                    Image(
+                        painter = painterResource(R.drawable.pepperoni),
+                        modifier = Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
 
                     OutlinedTextField(
                         value = username,
@@ -129,7 +136,7 @@ fun EditarPerfil(navController: NavController) {
                     )
                     {
                         Button(
-                            onClick = { navController.navigate(Screens.DetallesPerfil.route) },
+                            onClick = onDetallesPerfil,
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,
@@ -146,7 +153,7 @@ fun EditarPerfil(navController: NavController) {
         }
     }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -154,4 +161,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         EditarPerfil(navControllerLocal)
     }
-}
+}*/

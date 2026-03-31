@@ -68,7 +68,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Equipos(navController: NavController){
+fun Equipos(
+    onTableroPrincipal: () -> Unit,
+    onDetallesPerfil: () -> Unit,
+    onLogin: () -> Unit,
+    onCrearEquipo: () -> Unit,
+    onDetallesEquipo: () -> Unit
+){
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -83,7 +89,7 @@ fun Equipos(navController: NavController){
                 NavigationDrawerItem(
                     label = { Text( "Tareas" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.TableroPrincipal.route) },
+                    onClick = onTableroPrincipal,
                     icon = {Icon(Icons.Filled.Assignment, "")}
                 )
                 NavigationDrawerItem(
@@ -95,14 +101,14 @@ fun Equipos(navController: NavController){
                 NavigationDrawerItem(
                     label = { Text( "Perfil" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.DetallesPerfil.route) },
+                    onClick = onDetallesPerfil,
                     icon = {Icon(Icons.Filled.AccountCircle, "")}
                 )
                 HorizontalDivider(Modifier.padding(vertical = 8.dp))
                 NavigationDrawerItem(
                     label = { Text( "Cerrar Sesión" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Login.route) },
+                    onClick = onLogin,
                     icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
@@ -140,8 +146,7 @@ fun Equipos(navController: NavController){
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { navController.navigate(Screens.CrearEquipo.route) }
-                ) {
+                    onClick = onCrearEquipo) {
                     Icon(Icons.Filled.Add, "")
                 }
             }
@@ -152,9 +157,9 @@ fun Equipos(navController: NavController){
             {
                 /* CONTENIDO DE LA PANTALLA */
                 Column() {
-                    TarjetaEquipo(navController)
-                    TarjetaEquipo(navController)
-                    TarjetaEquipo(navController)
+                    TarjetaEquipo(onDetallesEquipo)
+                    TarjetaEquipo(onDetallesEquipo)
+                    TarjetaEquipo(onDetallesEquipo)
                 }
 
             }
@@ -163,12 +168,14 @@ fun Equipos(navController: NavController){
 }
 
 @Composable
-fun TarjetaEquipo(navController: NavController) {
+fun TarjetaEquipo(
+    onDetallesEquipo: () -> Unit
+) {
     var checked by remember() { mutableStateOf(false) }
     var expanded by remember() { mutableStateOf(false) }
 
     TextButton(
-        onClick = { navController.navigate(Screens.DetallesEquipo.route) },
+        onClick = onDetallesEquipo,
         shape = RectangleShape
     )
     {
@@ -198,10 +205,11 @@ fun TarjetaEquipo(navController: NavController) {
     }
 
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
     val n = rememberNavController()
     Equipos(n)
 }
+*/

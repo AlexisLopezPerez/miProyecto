@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +59,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarEquipo(navController: NavController) {
+fun EditarEquipo(
+    onGoBack: () -> Unit,
+    onDetallesEquipo: () -> Unit,
+) {
 
     val nombreEquipoString = stringResource(R.string.nombreEquipo)
     val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
@@ -73,10 +79,7 @@ fun EditarEquipo(navController: NavController) {
                     titleContentColor = Color.White
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }
-                    )
+                    IconButton(onClick = onGoBack)
                     {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -99,8 +102,12 @@ fun EditarEquipo(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Icon(imageVector = Icons.Filled.AccountCircle, "",
-                    Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp))
+                Image(
+                    painter = painterResource(R.drawable.pepperoni),
+                    modifier = Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
 
                 OutlinedTextField(
                     value = nombreEquipo,
@@ -121,7 +128,7 @@ fun EditarEquipo(navController: NavController) {
                 )
                 {
                     Button(
-                        onClick = { navController.navigate(Screens.DetallesEquipo.route) },
+                        onClick = onDetallesEquipo,
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -138,7 +145,7 @@ fun EditarEquipo(navController: NavController) {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -146,4 +153,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         EditarEquipo(navControllerLocal)
     }
-}
+}*/

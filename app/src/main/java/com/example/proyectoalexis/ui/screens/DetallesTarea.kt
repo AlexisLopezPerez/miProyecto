@@ -72,7 +72,9 @@ import com.example.proyectoalexis.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetallesTarea(navController: NavController) {
+fun DetallesTarea(
+    onGoBack: () -> Unit
+) {
 
     val nombreEquipoString = stringResource(R.string.nombreEquipo)
     val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
@@ -86,10 +88,7 @@ fun DetallesTarea(navController: NavController) {
                         titleContentColor = Color.White
                     ),
                     navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }
-                        )
+                        IconButton(onClick = onGoBack)
                         {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -148,7 +147,7 @@ fun DetallesTarea(navController: NavController) {
                             )
                             {
                                 TextButton(
-                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    onClick = {  },
                                     modifier = Modifier.widthIn(min = 50.dp, max = 300.dp)
                                 ) 
                                 {
@@ -160,7 +159,7 @@ fun DetallesTarea(navController: NavController) {
                                     )
                                 }
                                 IconButton(
-                                    onClick = { navController.navigate(Screens.Prueba.route) }
+                                    onClick = {  }
                                 ) 
                                 {
                                     Icon( 
@@ -183,7 +182,7 @@ fun DetallesTarea(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 TextButton(
-                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    onClick = { },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
@@ -202,7 +201,7 @@ fun DetallesTarea(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 TextButton(
-                                    onClick = { navController.navigate(Screens.Prueba.route) },
+                                    onClick = { },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
@@ -225,7 +224,7 @@ fun DetallesTarea(navController: NavController) {
         }
 
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -233,4 +232,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         DetallesTarea(navControllerLocal)
     }
-}
+}*/

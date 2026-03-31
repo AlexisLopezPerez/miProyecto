@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,7 +68,12 @@ import com.example.proyectoalexis.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetallesPerfil(navController: NavController) {
+fun DetallesPerfil(
+    onTableroPrincipal: () -> Unit,
+    onEquipos: () -> Unit,
+    onLogin: () -> Unit,
+    onEditarPerfil: () -> Unit,
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val showDialog = remember { mutableStateOf(false) }
@@ -87,13 +95,13 @@ fun DetallesPerfil(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text("Tareas") },
                     selected = false,
-                    onClick = { navController.navigate(Screens.TableroPrincipal.route) },
+                    onClick = onTableroPrincipal,
                     icon = { Icon(Icons.Filled.Assignment, "") }
                 )
                 NavigationDrawerItem(
                     label = { Text("Equipos") },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Equipos.route) },
+                    onClick = onEquipos,
                     icon = { Icon(Icons.Filled.Contacts, "") }
                 )
                 NavigationDrawerItem(
@@ -106,7 +114,7 @@ fun DetallesPerfil(navController: NavController) {
                 NavigationDrawerItem(
                     label = { Text( "Cerrar Sesión" ) },
                     selected = false,
-                    onClick = { navController.navigate(Screens.Login.route) },
+                    onClick = onLogin,
                     icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
@@ -153,11 +161,15 @@ fun DetallesPerfil(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Icon(imageVector = Icons.Filled.AccountCircle, "",
-                        Modifier
+                    Image(
+                        painter = painterResource(R.drawable.hawaiana),
+                        contentDescription = "",
+                        modifier = Modifier
                             .height(200.dp)
                             .width(200.dp)
-                            .padding(bottom = 60.dp))
+                            .padding(bottom = 60.dp),
+                        contentScale = ContentScale.Crop
+                    )
                     Card() {
                         Column(modifier = Modifier.padding(10.dp)) {
 
@@ -182,7 +194,7 @@ fun DetallesPerfil(navController: NavController) {
                     )
                     {
                         Button(
-                            onClick = { navController.navigate(Screens.EditarPerfil.route) },
+                            onClick = onEditarPerfil,
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,
@@ -223,9 +235,9 @@ fun DetallesPerfil(navController: NavController) {
                         },
                         confirmButton = {
                             TextButton(
-                                onClick = {
-                                    navController.navigate(Screens.Login.route)
-                                }
+                                onClick = onLogin
+
+
                             ) {
                                 Text("Eliminar")
                             }
@@ -251,7 +263,7 @@ fun DetallesPerfil(navController: NavController) {
 
 
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -259,4 +271,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         DetallesPerfil(navControllerLocal)
     }
-}
+}*/

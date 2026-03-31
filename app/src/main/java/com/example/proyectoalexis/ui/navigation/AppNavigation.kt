@@ -85,7 +85,13 @@ fun AppNavigation(){
                     }
 
                     composable(route = Screens.Equipos.route){
-                        Equipos(navController)
+                        Equipos(
+                            onLogin = {navController.navigate(Screens.Login.route)},
+                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)},
+                            onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)},
+                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onCrearEquipo = {navController.navigate(Screens.CrearEquipo.route)}
+                        )
                     }
 
                     composable(route = Screens.TableroPrincipal.route) {
@@ -100,32 +106,47 @@ fun AppNavigation(){
                     }
 
                     composable(route = Screens.DetallesPerfil.route){
-                        DetallesPerfil(navController)
+                        DetallesPerfil(
+                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onEquipos = {navController.navigate(Screens.Equipos.route)},
+                            onLogin = {navController.navigate(Screens.Login.route)},
+                            onEditarPerfil = {navController.navigate(Screens.EditarPerfil.route)}
+                        )
                     }
 
                     composable(route = Screens.DetallesEquipo.route){
                         DetallesEquipo(
                             onEquipos = {navController.navigate(Screens.Equipos.route)},
                             onGoBack = {navController.popBackStack()},
-                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
                             onEditarEquipo = { navController.navigate(Screens.EditarEquipo.route) }
                         )
                     }
 
                     composable(route = Screens.DetallesTarea.route){
-                        DetallesTarea(navController)
+                        DetallesTarea(
+                            onGoBack = {navController.popBackStack()}
+                        )
                     }
 
                     composable(route = Screens.EditarPerfil.route){
-                        EditarPerfil(navController)
+                        EditarPerfil(
+                            onGoBack = {navController.popBackStack()},
+                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)}
+                        )
                     }
 
                     composable(route = Screens.EditarEquipo.route){
-                        EditarEquipo(navController)
+                        EditarEquipo(
+                            onGoBack = {navController.popBackStack()},
+                            onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)}
+                        )
                     }
 
                     composable(route = Screens.EditarTarea.route){
-                        EditarTarea(navController)
+                        EditarTarea(
+                            onGoBack = {navController.popBackStack()},
+                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)}
+                        )
                     }
 
                     composable(route = Screens.CrearEquipo.route){

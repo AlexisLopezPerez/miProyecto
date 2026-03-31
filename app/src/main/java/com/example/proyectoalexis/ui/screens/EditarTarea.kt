@@ -63,7 +63,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarTarea(navController: NavController) {
+fun EditarTarea(
+    onGoBack: () -> Unit,
+    onDetallesTarea: () -> Unit
+) {
 
     val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
     val equipoTareaString = stringResource(R.string.nombreEquipo)
@@ -81,10 +84,7 @@ fun EditarTarea(navController: NavController) {
                     titleContentColor = Color.White
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }
-                    )
+                    IconButton(onClick = onGoBack)
                     {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -135,7 +135,7 @@ fun EditarTarea(navController: NavController) {
                         )
                         {
                             TextButton(
-                                onClick = { navController.navigate(Screens.Prueba.route) },
+                                onClick = { },
                                 modifier = Modifier.widthIn(min = 50.dp, max = 300.dp)
                             )
                             {
@@ -147,7 +147,7 @@ fun EditarTarea(navController: NavController) {
                                 )
                             }
                             IconButton(
-                                onClick = { navController.navigate(Screens.Prueba.route) }
+                                onClick = {  }
                             )
                             {
                                 Icon(
@@ -170,7 +170,7 @@ fun EditarTarea(navController: NavController) {
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             TextButton(
-                                onClick = { navController.navigate(Screens.Prueba.route) },
+                                onClick = {  },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
@@ -192,7 +192,7 @@ fun EditarTarea(navController: NavController) {
                 )
                 {
                     Button(
-                        onClick = { navController.navigate(Screens.DetallesTarea.route) },
+                        onClick = onDetallesTarea,
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -209,7 +209,7 @@ fun EditarTarea(navController: NavController) {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -217,4 +217,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         EditarTarea(navControllerLocal)
     }
-}
+}*/
