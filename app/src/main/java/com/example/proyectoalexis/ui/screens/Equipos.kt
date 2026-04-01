@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountCircle
@@ -56,15 +59,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.navigation.Screens
 import kotlinx.coroutines.launch
+import com.example.proyectoalexis.datos.datosIniciales.DatosEquipos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,11 +80,13 @@ fun Equipos(
     onDetallesPerfil: () -> Unit,
     onLogin: () -> Unit,
     onCrearEquipo: () -> Unit,
-    onDetallesEquipo: () -> Unit
+    onDetallesEquipo: (Int) -> Unit
 ){
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val contexto = LocalContext.current
+    val listaEquipos: List<Equipos> = DatosEquipos(contexto).loadEquipos()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -157,9 +166,7 @@ fun Equipos(
             {
                 /* CONTENIDO DE LA PANTALLA */
                 Column() {
-                    TarjetaEquipo(onDetallesEquipo)
-                    TarjetaEquipo(onDetallesEquipo)
-                    TarjetaEquipo(onDetallesEquipo)
+                    listarEquipos(listaEquipos, onDetallesEquipo)
                 }
 
             }
@@ -168,19 +175,31 @@ fun Equipos(
 }
 
 @Composable
+private fun listarEquipos(listaEquipos: List<Equipos>, onDetallesEquipo: (Int) -> Unit){
+    LazyColumn()
+    {
+        items(listaEquipos){
+            equipo -> TarjetaEquipo(
+                onDetallesEquipo = onDetallesEquipo,
+                equipo = equipo
+            )
+        }
+    }
+}
+
+@Composable
 fun TarjetaEquipo(
-    onDetallesEquipo: () -> Unit
+    onDetallesEquipo: (Int) -> Unit,
+    equipo: Equipos
 ) {
-    var checked by remember() { mutableStateOf(false) }
-    var expanded by remember() { mutableStateOf(false) }
 
     TextButton(
-        onClick = onDetallesEquipo,
+        onClick = { onDetallesEquipo(equipo.idEquipo) },
         shape = RectangleShape
     )
     {
         Card(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
             colors = CardDefaults.cardColors(
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -188,13 +207,19 @@ fun TarjetaEquipo(
         {
         Row(verticalAlignment = Alignment.CenterVertically)
         {
-            Image(painter = painterResource(R.drawable.hawaiana), "",
-                Modifier.width(150.dp).height(150.dp),
-                contentScale = ContentScale.Crop)
+            AsyncImage(
+                model = equipo.imagenUri,
+                contentDescription = equipo.nombre,
+                onError = {error ->
+                    Log.e("Pantalla Equipos, ${equipo.nombre}", "Error al cargar ${error.result.throwable}")
+                },
+                modifier = Modifier.width(150.dp).height(150.dp),
+                contentScale = ContentScale.Crop
+            )
             Column(modifier = Modifier.padding(10.dp)) {
-                Text(text = stringResource(R.string.nombreEquipo), style = MaterialTheme.typography.titleLarge)
+                Text(text = equipo.nombre, style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(10.dp))
-                Text(text = stringResource(R.string.descripcionEquipo))
+                Text(text = equipo.descripcion)
                 Spacer(Modifier.height(10.dp))
             }
         }
@@ -205,6 +230,7 @@ fun TarjetaEquipo(
     }
 
 }
+
 /*
 @Preview(showBackground = true)
 @Composable

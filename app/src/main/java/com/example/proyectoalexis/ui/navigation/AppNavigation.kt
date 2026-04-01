@@ -1,29 +1,21 @@
 package com.example.proyectoalexis.ui.navigation
 
-import android.R
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavArgument
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.screens.CrearEquipo
 import com.example.proyectoalexis.ui.screens.CrearTarea
 import com.example.proyectoalexis.ui.screens.DetallesEquipo
@@ -40,6 +32,7 @@ import com.example.proyectoalexis.ui.screens.Registro
 import com.example.proyectoalexis.ui.screens.TableroPrincipal
 
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
+import com.example.proyectoalexis.viewModel.equipoViewModel
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +40,14 @@ import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 fun AppNavigation(){
     //Paso 1 Crear el Nav Controller
     val navController = rememberNavController()
+
+    val contexto = LocalContext.current
+
+    val db = AppDatabase.getInstance(contexto)
+
+    val factory = equipoViewModelFactory(db.equipoDAO(), contexto.applicationContext)
+
+    val equipoViewModel: equipoViewModel = viewModel(factory = factory)
 
         /*Scaffold(
             topBar = {
@@ -88,7 +89,9 @@ fun AppNavigation(){
                         Equipos(
                             onLogin = {navController.navigate(Screens.Login.route)},
                             onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)},
-                            onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)},
+                            onDetallesEquipo = {idEquipo ->
+                                navController.navigate("${Screens.DetallesEquipo.route}/$idEquipo")
+                                               },
                             onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
                             onCrearEquipo = {navController.navigate(Screens.CrearEquipo.route)}
                         )
@@ -114,12 +117,22 @@ fun AppNavigation(){
                         )
                     }
 
-                    composable(route = Screens.DetallesEquipo.route){
-                        DetallesEquipo(
-                            onEquipos = {navController.navigate(Screens.Equipos.route)},
-                            onGoBack = {navController.popBackStack()},
-                            onEditarEquipo = { navController.navigate(Screens.EditarEquipo.route) }
-                        )
+                    composable(
+                        route = Screens.DetallesEquipo.route,
+                        arguments = listOf(navArgument(name = "idEquipo") {type = NavType.IntType})
+                    ){ backStackEntry ->
+                        val idEquipo = backStackEntry.arguments?.getInt("idEquipo")?:0
+                        val equipo = equipoViewModel.getEquipoById(idEquipo)
+
+                        if(equipo != null) {
+                            DetallesEquipo(
+                                onEquipos = { navController.navigate(Screens.Equipos.route) },
+                                onGoBack = { navController.popBackStack() },
+                                onEditarEquipo = {idEquipo ->
+                                    navController.navigate("${Screens.EditarEquipo.route}/$idEquipo")
+                                }
+                            )
+                        }
                     }
 
                     composable(route = Screens.DetallesTarea.route){
@@ -135,11 +148,20 @@ fun AppNavigation(){
                         )
                     }
 
-                    composable(route = Screens.EditarEquipo.route){
-                        EditarEquipo(
-                            onGoBack = {navController.popBackStack()},
-                            onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)}
-                        )
+                    composable(
+                        route = Screens.EditarEquipo.route,
+                        arguments = listOf(navArgument(name = "idEquipo") {type = NavType.IntType})
+                    ){ backStackEntry ->
+                        val idEquipo = backStackEntry.arguments?.getInt("idEquipo")?:0
+                        val equipo = equipoViewModel.getEquipoById(idEquipo)
+
+                        if(equipo != null) {
+                            EditarEquipo(
+                                onGoBack = {navController.popBackStack()},
+                                onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)},
+                                equipo = equipo
+                            )
+                        }
                     }
 
                     composable(route = Screens.EditarTarea.route){

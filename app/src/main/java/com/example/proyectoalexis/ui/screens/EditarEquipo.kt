@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,7 +53,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
@@ -62,12 +65,11 @@ import kotlinx.coroutines.launch
 fun EditarEquipo(
     onGoBack: () -> Unit,
     onDetallesEquipo: () -> Unit,
+    equipo: Equipos
 ) {
-
-    val nombreEquipoString = stringResource(R.string.nombreEquipo)
-    val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
-    var nombreEquipo by remember { mutableStateOf(nombreEquipoString) }
-    var descripcionEquipo by remember { mutableStateOf(descripcionEquipoString) }
+    var nombreEquipo by remember { mutableStateOf(equipo.nombre) }
+    var descripcionEquipo by remember { mutableStateOf(equipo.descripcion) }
+    var currentImageUri by remember { mutableStateOf<Uri?>(Uri.parse(equipo.imagenUri)) }
 
 
     Scaffold(
@@ -102,10 +104,10 @@ fun EditarEquipo(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Image(
-                    painter = painterResource(R.drawable.pepperoni),
+                AsyncImage(
+                    model = currentImageUri,
+                    contentDescription = equipo.nombre,
                     modifier = Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp),
-                    contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
 
