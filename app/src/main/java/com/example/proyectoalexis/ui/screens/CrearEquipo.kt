@@ -60,7 +60,7 @@ fun CrearEquipo(
     onGoBack: () -> Unit
 ) {
 
-    var nombreEquipo by remember { mutableStateOf("") }
+    var nombreEquipo by remember { mutableStateOf(" ") }
     var descripcionEquipo by remember { mutableStateOf("") }
 
 
