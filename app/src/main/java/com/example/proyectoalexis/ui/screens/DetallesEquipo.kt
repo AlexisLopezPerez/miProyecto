@@ -112,15 +112,7 @@ fun DetallesEquipo(
                                 Log.e("Pantalla Detalles Equipo, ${equipo?.nombre}","Error al cargar ${error.result.throwable}")
                             }
                         )
-                        Image(
-                            painter = painterResource(R.drawable.hawaiana),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .height(200.dp)
-                                .width(200.dp)
-                                .padding(bottom = 60.dp),
-                            contentScale = ContentScale.Crop
-                        )
+
                     }
                     item {
                         Card() {

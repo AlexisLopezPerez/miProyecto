@@ -17,4 +17,7 @@ interface EquiposDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(equipo: Equipos)
+
+    @Query("SELECT COUNT(*) FROM equipos")
+    suspend fun getCount(): Int
 }

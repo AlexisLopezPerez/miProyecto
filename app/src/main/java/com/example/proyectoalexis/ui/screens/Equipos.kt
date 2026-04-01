@@ -48,6 +48,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,6 +65,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -72,6 +74,7 @@ import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.navigation.Screens
 import kotlinx.coroutines.launch
 import com.example.proyectoalexis.datos.datosIniciales.DatosEquipos
+import com.example.proyectoalexis.viewModel.equipoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,13 +83,14 @@ fun Equipos(
     onDetallesPerfil: () -> Unit,
     onLogin: () -> Unit,
     onCrearEquipo: () -> Unit,
-    onDetallesEquipo: (Int) -> Unit
+    onDetallesEquipo: (Int) -> Unit,
+    viewModel: equipoViewModel = viewModel()
 ){
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val contexto = LocalContext.current
-    val listaEquipos: List<Equipos> = DatosEquipos(contexto).loadEquipos()
+    val listaEquipos by viewModel.listaDeEquipos.collectAsState(initial = emptyList())
 
     ModalNavigationDrawer(
         drawerState = drawerState,
