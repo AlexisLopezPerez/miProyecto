@@ -9,13 +9,11 @@ class DatosEquipos(private val contexto: Context) {
         val packageName = contexto.packageName
         return listOf<Equipos>(
             Equipos(
-                idEquipo = 1,
                 nombre = "Empresarial",
                 descripcion = "Equipo empresarial",
                 imagenUri = "android.resource://$packageName/${R.drawable.hawaiana}"
             ),
             Equipos(
-                idEquipo = 2,
                 nombre = "Academico",
                 descripcion = "Equipo Academico",
                 imagenUri = "android.resource://$packageName/${R.drawable.pepperoni}"

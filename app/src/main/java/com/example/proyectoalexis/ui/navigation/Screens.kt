@@ -11,11 +11,11 @@ sealed class Screens (val route: String){
     data object EditarPerfil: Screens("editarPerfil")
     data object Equipos: Screens("equipos")
     data object CrearEquipo: Screens("crearEquipo")
-    data object DetallesEquipo: Screens("detallesEquipo/{equipoId}"){
-        fun createRoute(equipoId: Int) = "detallesEquipo/$equipoId"
+    data object DetallesEquipo: Screens("detallesEquipo/{idEquipo}"){
+        fun createRoute(idEquipo: Int) = "detallesEquipo/$idEquipo"
     }
-    data object EditarEquipo: Screens("editarEquipo/{equipoId}"){
-        fun createRoute(equipoId: Int) = "editarEquipo/$equipoId"
+    data object EditarEquipo: Screens("editarEquipo/{idEquipo}"){
+        fun createRoute(idEquipo: Int) = "editarEquipo/$idEquipo"
     }
     data object Prueba: Screens("prueba")
 

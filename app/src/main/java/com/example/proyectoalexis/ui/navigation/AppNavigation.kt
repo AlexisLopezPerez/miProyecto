@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.proyectoalexis.datos.AppDatabase
 import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.screens.CrearEquipo
 import com.example.proyectoalexis.ui.screens.CrearTarea
@@ -33,6 +34,7 @@ import com.example.proyectoalexis.ui.screens.TableroPrincipal
 
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import com.example.proyectoalexis.viewModel.equipoViewModel
+import com.example.proyectoalexis.viewModel.equipoViewModelFactory
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +47,7 @@ fun AppNavigation(){
 
     val db = AppDatabase.getInstance(contexto)
 
-    val factory = equipoViewModelFactory(db.equipoDAO(), contexto.applicationContext)
+    val factory = equipoViewModelFactory(db.equiposDAO(), contexto.applicationContext)
 
     val equipoViewModel: equipoViewModel = viewModel(factory = factory)
 
@@ -130,7 +132,8 @@ fun AppNavigation(){
                                 onGoBack = { navController.popBackStack() },
                                 onEditarEquipo = {idEquipo ->
                                     navController.navigate("${Screens.EditarEquipo.route}/$idEquipo")
-                                }
+                                },
+                                equipo = equipo
                             )
                         }
                     }
