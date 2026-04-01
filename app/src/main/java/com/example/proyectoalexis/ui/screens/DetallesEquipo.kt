@@ -62,7 +62,7 @@ fun DetallesEquipo(
     val showDialog = remember { mutableStateOf(false) }
     val nombreEquipoString = equipo.nombre
     val descripcionEquipoString = equipo.descripcion
-    var currentImageUri = Uri.parse(equipo.imagenUri)
+    val currentImageUri = Uri.parse(equipo.imagenUri)
 
 
         Scaffold(
