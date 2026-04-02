@@ -22,6 +22,12 @@ class equipoViewModel(private val equipoDAO: EquiposDAO, private val contexto: C
     return listaDeEquipos.value.find { it.idEquipo == idEquipo }
     }
 
+    fun actualizarEquipo(equipoActualizado: Equipos){
+        viewModelScope.launch {
+            equipoDAO.update(equipoActualizado)
+        }
+    }
+
     init {
         viewModelScope.launch {
             val count = equipoDAO.getCount()

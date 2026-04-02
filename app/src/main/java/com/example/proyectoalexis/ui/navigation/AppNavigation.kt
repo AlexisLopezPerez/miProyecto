@@ -165,7 +165,10 @@ fun AppNavigation(){
                         if(equipo != null) {
                             EditarEquipo(
                                 onGoBack = {navController.popBackStack()},
-                                onDetallesEquipo = {navController.navigate(Screens.DetallesEquipo.route)},
+                                onActualizarEquipo = {equipoActualizado ->
+                                    equipoViewModel.actualizarEquipo(equipoActualizado)
+                                    navController.popBackStack()
+                                                     },
                                 equipo = equipo
                             )
                         }

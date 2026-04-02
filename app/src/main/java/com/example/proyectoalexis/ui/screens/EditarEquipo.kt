@@ -1,6 +1,7 @@
 package com.example.proyectoalexis.ui.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,9 +66,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditarEquipo(
     onGoBack: () -> Unit,
-    onDetallesEquipo: () -> Unit,
+    onActualizarEquipo: (Equipos) -> Unit,
     equipo: Equipos
 ) {
+    var contexto = LocalContext.current
     var nombreEquipo by remember { mutableStateOf(equipo.nombre) }
     var descripcionEquipo by remember { mutableStateOf(equipo.descripcion) }
     var currentImageUri by remember { mutableStateOf<Uri?>(Uri.parse(equipo.imagenUri)) }
@@ -99,7 +102,9 @@ fun EditarEquipo(
         Box(modifier = Modifier.padding(innerPading))
         {
             Column(
-                modifier = Modifier.fillMaxSize().padding(40.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(40.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             )
@@ -107,7 +112,10 @@ fun EditarEquipo(
                 AsyncImage(
                     model = currentImageUri,
                     contentDescription = equipo.nombre,
-                    modifier = Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp),
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp)
+                        .padding(bottom = 60.dp),
                     contentScale = ContentScale.Crop
                 )
 
@@ -130,7 +138,21 @@ fun EditarEquipo(
                 )
                 {
                     Button(
-                        onClick = onDetallesEquipo,
+                        onClick = {
+                            val nuevoNombre = nombreEquipo
+
+                            val nuevaDescripcion = descripcionEquipo
+
+                            val equipoActualizado = equipo.copy(nombre = nuevoNombre, descripcion = nuevaDescripcion)
+
+                            onActualizarEquipo(equipoActualizado)
+
+                            Toast.makeText(
+                                contexto,
+                                "El equipo se ha actualizado",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                                  },
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
