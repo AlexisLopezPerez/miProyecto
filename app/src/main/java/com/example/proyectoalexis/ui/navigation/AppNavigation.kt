@@ -132,7 +132,10 @@ fun AppNavigation(){
                         if(equipo != null) {
 
                             DetallesEquipo(
-                                onEquipos = { navController.navigate(Screens.Equipos.route) },
+                                onEliminarEquipo = {equipoAEliminar ->
+                                    equipoViewModel.eliminarEquipo(equipoAEliminar)
+                                    navController.navigate(Screens.Equipos.route)
+                                                   },
                                 onGoBack = { navController.popBackStack() },
                                 onEditarEquipo = {idEquipo ->
                                     navController.navigate("editarEquipo/$idEquipo")

@@ -28,6 +28,12 @@ class equipoViewModel(private val equipoDAO: EquiposDAO, private val contexto: C
         }
     }
 
+    fun eliminarEquipo(equipo: Equipos){
+        viewModelScope.launch {
+            equipoDAO.delete(equipo)
+        }
+    }
+
     init {
         viewModelScope.launch {
             val count = equipoDAO.getCount()

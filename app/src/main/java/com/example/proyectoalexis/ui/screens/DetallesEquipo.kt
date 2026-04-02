@@ -55,7 +55,7 @@ import com.example.proyectoalexis.datos.Equipos
 fun DetallesEquipo(
     onGoBack: () -> Unit,
     onEditarEquipo: (Int) -> Unit,
-    onEquipos: () -> Unit,
+    onEliminarEquipo: (Equipos) -> Unit,
     equipo: Equipos
 ) {
 
@@ -250,7 +250,7 @@ fun DetallesEquipo(
 
                 }
                 if (showDialog.value) {
-                    CuadroEliminar(onEquipos, showDialog)
+                    CuadroEliminar(onEliminarEquipo, showDialog, equipo)
                 }
             }
         }
@@ -258,7 +258,7 @@ fun DetallesEquipo(
 
 
 @Composable
-private fun CuadroEliminar(onEquipos: () -> Unit, showDialog: MutableState<Boolean>){
+private fun CuadroEliminar(onEliminarEquipo: (Equipos) -> Unit, showDialog: MutableState<Boolean>, equipo: Equipos){
     AlertDialog(
         icon = {
             Icon(Icons.Filled.Info, contentDescription = "Example Icon")
@@ -274,7 +274,10 @@ private fun CuadroEliminar(onEquipos: () -> Unit, showDialog: MutableState<Boole
         },
         confirmButton = {
             TextButton(
-                onClick = onEquipos) {
+                onClick = {
+                    onEliminarEquipo(equipo)
+                }
+            ) {
                 Text("Eliminar")
             }
         },
