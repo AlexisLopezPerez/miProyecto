@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,12 +45,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
@@ -57,13 +62,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CrearEquipo(
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    onEquipos: (Equipos) -> Unit
 ) {
 
-    var nombreEquipo by remember { mutableStateOf(" ") }
+    var nombreEquipo by remember { mutableStateOf("") }
     var descripcionEquipo by remember { mutableStateOf("") }
-
-
+    var contexto = LocalContext.current
+    var packageName = contexto.packageName
+    var imagenDefaultUri by remember { mutableStateOf("android.resource://$packageName/${R.drawable.pepperoni}") }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -98,9 +105,18 @@ fun CrearEquipo(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Icon(imageVector = Icons.Filled.AccountCircle, "",
-                    Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp))
-
+                AsyncImage(
+                    model = imagenDefaultUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp)
+                        .padding(bottom = 60.dp),
+                    contentScale = ContentScale.Crop,
+                    onError = { error ->
+                        Log.e("Pantalla Crear Equipo","Error al cargar ${error.result.throwable}")
+                    }
+                )
                 OutlinedTextField(
                     value = nombreEquipo,
                     onValueChange = { nombreEquipo = it },
@@ -120,7 +136,11 @@ fun CrearEquipo(
                 )
                 {
                     Button(
-                        onClick = onGoBack,
+                        onClick = {
+                            val equipoACrear = Equipos(nombre = nombreEquipo, descripcion = descripcionEquipo, imagenUri = imagenDefaultUri)
+
+                            onEquipos(equipoACrear)
+                        },
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -137,7 +157,7 @@ fun CrearEquipo(
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun Preview(){
@@ -145,4 +165,4 @@ private fun Preview(){
     ProyectoALexisTheme{
         CrearEquipo({})
     }
-}
+}*/

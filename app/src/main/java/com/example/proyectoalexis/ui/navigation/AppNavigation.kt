@@ -186,7 +186,13 @@ fun AppNavigation(){
 
                     composable(route = Screens.CrearEquipo.route){
                         CrearEquipo(
-                            onGoBack = {navController.popBackStack()}
+                            onGoBack = {navController.popBackStack()},
+                            onEquipos = {equipoACrear ->
+                                equipoViewModel.crearEquipo(equipoACrear)
+
+                                navController.navigate(Screens.Equipos.route)
+
+                            }
                         )
                     }
 

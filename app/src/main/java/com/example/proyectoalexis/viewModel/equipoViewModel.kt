@@ -34,6 +34,12 @@ class equipoViewModel(private val equipoDAO: EquiposDAO, private val contexto: C
         }
     }
 
+    fun crearEquipo(equipo: Equipos){
+        viewModelScope.launch {
+            equipoDAO.insert(equipo)
+        }
+    }
+
     init {
         viewModelScope.launch {
             val count = equipoDAO.getCount()
