@@ -1,7 +1,10 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -73,7 +77,24 @@ fun EditarEquipo(
     var nombreEquipo by remember { mutableStateOf(equipo.nombre) }
     var descripcionEquipo by remember { mutableStateOf(equipo.descripcion) }
     var currentImageUri by remember { mutableStateOf<Uri?>(Uri.parse(equipo.imagenUri)) }
+    var galeryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null){
+            try {
+                //esto es para que android nos de permiso de acceder siempre a la imagen
+                val contentResolver = contexto.contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
 
+                //Hacer que el permiso persista
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+                currentImageUri = uri
+            }
+            catch (e: Exception){
+                currentImageUri = uri
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -118,7 +139,15 @@ fun EditarEquipo(
                         .padding(bottom = 60.dp),
                     contentScale = ContentScale.Crop
                 )
-
+                OutlinedButton(
+                    onClick = {
+                        galeryLauncher.launch("image/x")
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                )
+                {
+                    Text("Cambiar Foto")
+                }
                 OutlinedTextField(
                     value = nombreEquipo,
                     onValueChange = { nombreEquipo = it },
@@ -143,7 +172,8 @@ fun EditarEquipo(
 
                             val nuevaDescripcion = descripcionEquipo
 
-                            val equipoActualizado = equipo.copy(nombre = nuevoNombre, descripcion = nuevaDescripcion)
+                            val equipoActualizado = equipo.copy(nombre = nuevoNombre,
+                                descripcion = nuevaDescripcion, imagenUri = currentImageUri.toString())
 
                             onActualizarEquipo(equipoActualizado)
 
