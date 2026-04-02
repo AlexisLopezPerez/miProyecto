@@ -1,6 +1,10 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -70,7 +75,26 @@ fun CrearEquipo(
     var descripcionEquipo by remember { mutableStateOf("") }
     var contexto = LocalContext.current
     var packageName = contexto.packageName
-    var imagenDefaultUri by remember { mutableStateOf("android.resource://$packageName/${R.drawable.pepperoni}") }
+    var imagenDefaultUri by remember { mutableStateOf(Uri.parse("android.resource://$packageName/${R.drawable.pepperoni}")) }
+    var galeryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null){
+            try {
+                //esto es para que android nos de permiso de acceder siempre a la imagen
+                val contentResolver = contexto.contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+                //Hacer que el permiso persista
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+                imagenDefaultUri = uri
+            }
+            catch (e: Exception){
+                imagenDefaultUri = uri
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -117,6 +141,15 @@ fun CrearEquipo(
                         Log.e("Pantalla Crear Equipo","Error al cargar ${error.result.throwable}")
                     }
                 )
+                OutlinedButton(
+                    onClick = {
+                        galeryLauncher.launch("image/*")
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                )
+                {
+                    Text("Cambiar Foto")
+                }
                 OutlinedTextField(
                     value = nombreEquipo,
                     onValueChange = { nombreEquipo = it },
@@ -137,7 +170,7 @@ fun CrearEquipo(
                 {
                     Button(
                         onClick = {
-                            val equipoACrear = Equipos(nombre = nombreEquipo, descripcion = descripcionEquipo, imagenUri = imagenDefaultUri)
+                            val equipoACrear = Equipos(nombre = nombreEquipo, descripcion = descripcionEquipo, imagenUri = imagenDefaultUri.toString())
 
                             onEquipos(equipoACrear)
                         },

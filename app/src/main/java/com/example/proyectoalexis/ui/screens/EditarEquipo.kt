@@ -141,7 +141,7 @@ fun EditarEquipo(
                 )
                 OutlinedButton(
                     onClick = {
-                        galeryLauncher.launch("image/x")
+                        galeryLauncher.launch("image/*")
                     },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
                 )
