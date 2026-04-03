@@ -244,7 +244,7 @@ fun DetallesEquipo(
 
                     // } }
                     if(showBottomSheet.value){
-                        MostrarUsuariosAgregar(showBottomSheet, sheetState, listaUsuarios)
+                        MostrarUsuariosAgregar(showBottomSheet, sheetState, listaUsuarios, listaIntegrantes)
                     }
 
                 }
@@ -372,7 +372,8 @@ fun escribirIntegrantes(listaIntegrantes: List<Usuarios>,
 fun MostrarUsuariosAgregar(
     showBottomSheet: MutableState<Boolean>,
     sheetState: SheetState,
-    listaUsuarios: List<Usuarios>
+    listaUsuarios: List<Usuarios>,
+    listaIntegrantes: List<Usuarios>
 )
 {
     ModalBottomSheet(
@@ -413,7 +414,8 @@ fun MostrarUsuariosAgregar(
                     Button(
                         onClick = {
                             showBottomSheet.value = false
-                        }
+                        },
+                        enabled = !(EstaEsteUsaurioEnEsteEquipo(usuario.idUsuario, listaIntegrantes))
                     )
                     {
                         Icon(imageVector = Icons.Filled.Add, "")
@@ -424,6 +426,13 @@ fun MostrarUsuariosAgregar(
     }
 }
 
+fun EstaEsteUsaurioEnEsteEquipo(idUsuario: Int, listaIntegrantes: List<Usuarios>): Boolean{
+    var result = false
+    listaIntegrantes.forEach { integrante ->
+        if (integrante.idUsuario == idUsuario) result = true
+    }
+    return result
+}
 /*
 @Preview(showBackground = true)
 @Composable
