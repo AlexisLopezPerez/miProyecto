@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -30,11 +32,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -72,10 +78,16 @@ fun DetallesEquipo(
 
     val showDialog = remember { mutableStateOf(false) }
     val showDialogListaIntegrantes = remember { mutableStateOf(false) }
+    var showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+
     val nombreEquipoString = equipo.nombre
     val descripcionEquipoString = equipo.descripcion
     val currentImageUri = Uri.parse(equipo.imagenUri)
     val listaIntegrantes by viewModel.getIntegrantes(equipo.idEquipo).collectAsStateWithLifecycle(initialValue = emptyList())
+    val listaUsuarios by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
     //val listaIntegrantes by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
 
     //viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
@@ -210,7 +222,9 @@ fun DetallesEquipo(
                                     style = MaterialTheme.typography.titleLarge
                                 )
                                 IconButton(
-                                    onClick = {}
+                                    onClick = {
+                                        showBottomSheet.value = true
+                                    }
                                 ) {
                                     Icon(imageVector = Icons.Filled.Add, "")
                                 }
@@ -229,6 +243,9 @@ fun DetallesEquipo(
                     //item {
 
                     // } }
+                    if(showBottomSheet.value){
+                        MostrarUsuariosAgregar(showBottomSheet, sheetState, listaUsuarios)
+                    }
 
                 }
 
@@ -344,6 +361,63 @@ fun escribirIntegrantes(listaIntegrantes: List<Usuarios>,
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Delete, "")
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MostrarUsuariosAgregar(
+    showBottomSheet: MutableState<Boolean>,
+    sheetState: SheetState,
+    listaUsuarios: List<Usuarios>
+)
+{
+    ModalBottomSheet(
+        modifier = Modifier.fillMaxHeight(),
+        sheetState = sheetState,
+        onDismissRequest = { showBottomSheet.value = false }
+    )
+    {
+        LazyColumn(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            items(listaUsuarios) { usuario ->
+
+                Row(
+                    modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AsyncImage(
+                            model = usuario.imagenUri,
+                            contentDescription = usuario.nombre,
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(60.dp),
+                            contentScale = ContentScale.Crop,
+                            onError = { error ->
+                                Log.e(
+                                    "Pantalla Detalles Equipo (MostrarUsuariosAgregar), ${usuario.nombre}",
+                                    "Error al cargar ${error.result.throwable}"
+                                )
+                            }
+                        )
+                        Text(text = usuario.nombre, modifier = Modifier.padding(horizontal = 10.dp))
+                    }
+                    Button(
+                        onClick = {
+                            showBottomSheet.value = false
+                        }
+                    )
+                    {
+                        Icon(imageVector = Icons.Filled.Add, "")
+                    }
                 }
             }
         }
