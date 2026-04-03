@@ -96,7 +96,10 @@ fun AppNavigation(){
                     composable(route= Screens.Registro.route){
                         Registro(
                            onGoBack = {navController.popBackStack()},
-                            onLogin = {navController.navigate(Screens.Login.route)}
+                            onLogin = { usuarioACrear ->
+                                usuarioViewModel.crearUsuario(usuarioACrear)
+                                navController.navigate(Screens.Login.route)
+                            }
                         )
                     }
 

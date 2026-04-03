@@ -1,6 +1,7 @@
 package com.example.proyectoalexis.ui.screens
 
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,17 +37,23 @@ import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.platform.LocalContext
+import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Usuarios
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Registro(
     onGoBack: () -> Unit,
-    onLogin: () -> Unit,
+    onLogin: (Usuarios) -> Unit,
 ) {
     var username by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var password2 by remember { mutableStateOf("") }
+
+    val contexto = LocalContext.current
+    val packageName = contexto.packageName
 
     Scaffold(
         topBar = {
@@ -102,11 +109,42 @@ fun Registro(
                 )
                 Spacer(modifier = Modifier.height(30.dp))
                 Button(
-                    onClick = onLogin
+                    onClick = {
+                        if (username != "" && password != "" && password2 != ""
+                            && correo != "") {
+                            if (password == password2) {
+                                val usuarioACrear = Usuarios(
+                                    nombre = username,
+                                    password = password, correo = correo,
+                                    imagenUri = "android.resource://$packageName/${R.drawable.perfil_default}"
+                                )
+
+                                onLogin(usuarioACrear)
+
+                                Toast.makeText(
+                                    contexto,
+                                    "Ha sido registrado con exito",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }else{
+                                Toast.makeText(
+                                    contexto,
+                                    "Las contraseñas no coinciden",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }else{
+                            Toast.makeText(
+                                contexto,
+                                "Hay campos vacios. Porfavor, rellenelos",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 ) { Text("Registrarse") }
                 Spacer(modifier = Modifier.height(10.dp))
                 TextButton(
-                    onClick = onLogin,
+                    onClick = onGoBack,
                 ) { Text(text = "Ya tengo una cuenta") }
             }
         }
