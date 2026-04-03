@@ -236,7 +236,9 @@ fun DetallesEquipo(
                             escribirIntegrantes(
                                 listaIntegrantes,
                                 viewModel,
-                                showDialogListaIntegrantes
+                                showDialogListaIntegrantes,
+                                equipo = equipo,
+                                integrantesViewModel =  integrantesViewModel
                             )
                         }
                     }
@@ -256,11 +258,6 @@ fun DetallesEquipo(
 
                 if (showDialog.value) {
                     CuadroEliminar(onEliminarEquipo, showDialog, equipo)
-                }
-
-                if (showDialogListaIntegrantes.value) {
-                    CuadroEliminarIntegrante(showDialogListaIntegrantes = showDialogListaIntegrantes)
-
                 }
             }
 
@@ -304,7 +301,13 @@ private fun CuadroEliminar(onEliminarEquipo: (Equipos) -> Unit, showDialog: Muta
 }
 
 @Composable
-private fun CuadroEliminarIntegrante(showDialogListaIntegrantes: MutableState<Boolean>){
+private fun CuadroEliminarIntegrante(
+    showDialogListaIntegrantes: MutableState<Boolean>,
+    integrantesViewModel: integrantesViewModel,
+    equipo: Equipos,
+    integranteAEliminar: IntegrantesEquipo?
+)
+{
     AlertDialog(
         icon = {
             Icon(Icons.Filled.Info, contentDescription = "Example Icon")
@@ -321,6 +324,7 @@ private fun CuadroEliminarIntegrante(showDialogListaIntegrantes: MutableState<Bo
         confirmButton = {
             TextButton(
                 onClick = {
+                    integrantesViewModel.eliminarIntegrante(integranteAEliminar)
                     showDialogListaIntegrantes.value = false
                 }
             ) {
@@ -342,8 +346,11 @@ private fun CuadroEliminarIntegrante(showDialogListaIntegrantes: MutableState<Bo
 @Composable
 fun escribirIntegrantes(listaIntegrantes: List<Usuarios>,
                         viewModel: usuarioViewModel = viewModel(),
-                        showDialogListaIntegrantes: MutableState<Boolean>
+                        showDialogListaIntegrantes: MutableState<Boolean>,
+                        equipo: Equipos,
+                        integrantesViewModel: integrantesViewModel
 ){
+    var integranteAEliminar: IntegrantesEquipo? = null
     Log.d("Detalles Equipo (escribirIntegrantes)", "Tamaño de Lista Integrantes: ${listaIntegrantes.size}")
     LazyColumn()
     {
@@ -360,16 +367,31 @@ fun escribirIntegrantes(listaIntegrantes: List<Usuarios>,
                 )
                 IconButton(
                     onClick = {
-                        //CAMBIAR POR UN CUADRO DE SELECCION
+                        integranteAEliminar = integrantesViewModel.getIntegranteByIdEquipoAndIdUsuario(
+                            idEquipo = equipo.idEquipo, idUsuario = integrante.idUsuario
+                        )
+
+
                         showDialogListaIntegrantes.value = true
-                        //viewModel.eliminarUsuario(integrante)
+
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Delete, "")
                 }
             }
+
+            if (showDialogListaIntegrantes.value) {
+                CuadroEliminarIntegrante(
+                    showDialogListaIntegrantes = showDialogListaIntegrantes,
+                    integrantesViewModel =  integrantesViewModel,
+                    integranteAEliminar = integranteAEliminar,
+                    equipo = equipo
+                )
+
+            }
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

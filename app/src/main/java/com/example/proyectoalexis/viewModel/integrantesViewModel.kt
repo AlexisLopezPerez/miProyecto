@@ -1,6 +1,7 @@
 package com.example.proyectoalexis.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.IntegrantesDAO
@@ -27,20 +28,20 @@ class integrantesViewModel(private val integrantesDAO: IntegrantesDAO,
         }
     }
 
-    /*fun getIntegrantesByIdEquipo(idEquipo: Int): StateFlow<List<Usuarios>>{
-        val listaIntegrantes = listaDeIntegrantes.value.filter {
-            it.idEquipo == idEquipo
+    fun getIntegranteByIdEquipoAndIdUsuario(idEquipo: Int, idUsuario: Int): IntegrantesEquipo?{
+        return listaDeIntegrantes.value.find {
+            it.idUsuario == idUsuario && it.idEquipo == idEquipo
         }
-        val listaUsuarios = flowOf(mutableListOf<Usuarios?>())
-        listaIntegrantes.forEach { integrante ->
-            listaUsuarios. /*add(integrantesDAO.getUsuarioById(integrante.idUsuario)*/
-        }
-        return listaUsuarios
-    }*/
+    }
 
-    fun eliminarIntegrante(integrantesEquipo: IntegrantesEquipo){
+    fun eliminarIntegrante(integrantesEquipo: IntegrantesEquipo?){
         viewModelScope.launch {
-            integrantesDAO.delete(integrantesEquipo)
+            if (integrantesEquipo != null){ val integrante: IntegrantesEquipo = integrantesEquipo!!
+                integrantesDAO.delete(integrante)
+            }
+            else{
+                Log.d("integrantesViewModel (eliminarIntegrante)","No se elimino el integrante")
+            }
         }
     }
 
