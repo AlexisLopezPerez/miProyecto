@@ -36,6 +36,8 @@ import com.example.proyectoalexis.ui.screens.TableroPrincipal
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import com.example.proyectoalexis.viewModel.equipoViewModel
 import com.example.proyectoalexis.viewModel.equipoViewModelFactory
+import com.example.proyectoalexis.viewModel.integrantesViewModel
+import com.example.proyectoalexis.viewModel.integrantesViewModelFactory
 import com.example.proyectoalexis.viewModel.usuarioViewModel
 import com.example.proyectoalexis.viewModel.usuarioViewModelFactory
 
@@ -57,6 +59,10 @@ fun AppNavigation(){
     val factoryUsuario = usuarioViewModelFactory(db.usuariosDAO(), contexto.applicationContext)
 
     val usuarioViewModel: usuarioViewModel = viewModel(factory = factoryUsuario)
+
+    val factoryIntegrantes = integrantesViewModelFactory(db.integrantesDAO(), contexto.applicationContext)
+
+    val integrantesViewModel: integrantesViewModel = viewModel(factory = factoryIntegrantes)
 
         /*Scaffold(
             topBar = {
@@ -147,7 +153,8 @@ fun AppNavigation(){
                                     navController.navigate("editarEquipo/$idEquipo")
                                 },
                                 equipo = equipo,
-                                viewModel = usuarioViewModel
+                                viewModel = usuarioViewModel,
+                                integrantesViewModel = integrantesViewModel
                             )
                         }
                     }

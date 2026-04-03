@@ -53,6 +53,7 @@ import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.datos.Usuarios
+import com.example.proyectoalexis.viewModel.integrantesViewModel
 import com.example.proyectoalexis.viewModel.usuarioViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.forEach
@@ -64,6 +65,7 @@ fun DetallesEquipo(
     onEditarEquipo: (Int) -> Unit,
     onEliminarEquipo: (Equipos) -> Unit,
     viewModel: usuarioViewModel = viewModel(),
+    integrantesViewModel: integrantesViewModel = viewModel(),
     equipo: Equipos
 ) {
 
@@ -73,6 +75,13 @@ fun DetallesEquipo(
     val descripcionEquipoString = equipo.descripcion
     val currentImageUri = Uri.parse(equipo.imagenUri)
     val listaIntegrantes by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
+    /*val listaPrueba by integrantesViewModel.getIntegrantesByIdEquipo(equipo.idEquipo)
+
+    listaPrueba.forEach {nose ->
+        Log.d("ListaPrueba", "${nose?.nombre}")
+    }*/
+
+    //viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
     Log.d("Detalles Equipo (main)", "Tamaño de Lista Integrantes: ${listaIntegrantes.size}")
         Scaffold(
             topBar = {
