@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -36,6 +37,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,9 +48,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Equipos
+import com.example.proyectoalexis.datos.Usuarios
+import com.example.proyectoalexis.viewModel.usuarioViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,15 +63,17 @@ fun DetallesEquipo(
     onGoBack: () -> Unit,
     onEditarEquipo: (Int) -> Unit,
     onEliminarEquipo: (Equipos) -> Unit,
+    viewModel: usuarioViewModel = viewModel(),
     equipo: Equipos
 ) {
 
     val showDialog = remember { mutableStateOf(false) }
+    val showDialogListaIntegrantes = remember { mutableStateOf(false) }
     val nombreEquipoString = equipo.nombre
     val descripcionEquipoString = equipo.descripcion
     val currentImageUri = Uri.parse(equipo.imagenUri)
-
-
+    val listaIntegrantes by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
+    Log.d("Detalles Equipo (main)", "Tamaño de Lista Integrantes: ${listaIntegrantes.size}")
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -91,7 +100,7 @@ fun DetallesEquipo(
         { innerPading ->
             Box(modifier = Modifier.padding(innerPading))
             {
-                LazyColumn(
+                /*LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(40.dp),
@@ -99,46 +108,57 @@ fun DetallesEquipo(
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    item {
-                        AsyncImage(
-                            model = currentImageUri,
-                            contentDescription = equipo?.nombre,
-                            modifier = Modifier
-                                .height(200.dp)
-                                .width(200.dp)
-                                .padding(bottom = 60.dp),
-                            contentScale = ContentScale.Crop,
-                            onError = { error ->
-                                Log.e("Pantalla Detalles Equipo, ${equipo?.nombre}","Error al cargar ${error.result.throwable}")
-                            }
-                        )
+                    item {*/
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(40.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                )
+                {
+                    AsyncImage(
+                        model = currentImageUri,
+                        contentDescription = equipo?.nombre,
+                        modifier = Modifier
+                            .height(200.dp)
+                            .width(200.dp)
+                            .padding(bottom = 60.dp),
+                        contentScale = ContentScale.Crop,
+                        onError = { error ->
+                            Log.e(
+                                "Pantalla Detalles Equipo, ${equipo?.nombre}",
+                                "Error al cargar ${error.result.throwable}"
+                            )
+                        }
+                    )
 
-                    }
-                    item {
-                        Card() {
-                            Column(modifier = Modifier.padding(10.dp)) {
 
-                                Text(
-                                    text = "Nombre del equipo:", style = MaterialTheme.typography.titleLarge
-                                )
-                                Text(
-                                    text = nombreEquipoString?:""
-                                )
-                                Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                                Text(
-                                    text = "Descripción:", style = MaterialTheme.typography.titleLarge
-                                )
-                                Text(
-                                    text = descripcionEquipoString?:""
-                                )
 
-                            }
+                    Card() {
+                        Column(modifier = Modifier.padding(10.dp)) {
+
+                            Text(
+                                text = "Nombre del equipo:",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                text = nombreEquipoString ?: ""
+                            )
+                            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
+                            Text(
+                                text = "Descripción:", style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                text = descripcionEquipoString ?: ""
+                            )
+
                         }
                     }
-                    item {
+
+
                         Spacer(Modifier.height(20.dp))
-                    }
-                    item {
+
                         Row(
                             Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -158,8 +178,7 @@ fun DetallesEquipo(
                             }
                             Button(
                                 onClick =
-                                    { showDialog.value = true }
-                                ,
+                                    { showDialog.value = true },
                                 colors = ButtonColors(
                                     containerColor = MaterialTheme.colorScheme.error,
                                     contentColor = Color.White,
@@ -170,90 +189,53 @@ fun DetallesEquipo(
                                 Text("Eliminar")
                             }
                         }
-                    }
-                    item {
+                        //}
+                        //item {
                         Spacer(Modifier.height(20.dp))
-                    }
-                    item {
-                        Card()
-                        {
-                            Column(modifier = Modifier.padding(10.dp)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ){
-                                    Text(
-                                        text = "Integrantes:", style = MaterialTheme.typography.titleLarge
-                                    )
-                                    IconButton(
-                                        onClick = {}
-                                    ) {
-                                        Icon(imageVector = Icons.Filled.Add, "")
-                                    }
-                                }
-                                Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                        Card() {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Integrantes:",
+                                    style = MaterialTheme.typography.titleLarge
                                 )
-                                {
-                                    Text(
-                                        text = "Alexis"
-                                    )
-                                    IconButton(
-                                        onClick = {}
-                                    ) {
-                                        Icon(imageVector = Icons.Filled.Delete, "")
-                                    }
-                                }
-                                Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                )
-                                {
-                                    Text(
-                                        text = "Persona 1"
-                                    )
-                                    IconButton(
-                                        onClick = {}
-                                    ) {
-                                        Icon(imageVector = Icons.Filled.Delete, "")
-                                    }
-                                }
-                                Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                )
-                                {
-                                    Text(
-                                        text = "Persona 2"
-                                    )
-                                    IconButton(
-                                        onClick = {}
-                                    ) {
-                                        Icon(imageVector = Icons.Filled.Delete, "")
-                                    }
+                                IconButton(
+                                    onClick = {}
+                                ) {
+                                    Icon(imageVector = Icons.Filled.Add, "")
                                 }
                             }
+                            escribirIntegrantes(
+                                listaIntegrantes,
+                                viewModel,
+                                showDialogListaIntegrantes
+                            )
                         }
                     }
-                    item {
-                        Spacer(Modifier.height(60.dp))
                     }
 
 
+                    // }
+                    //item {
+
+                    // } }
+
                 }
+
                 if (showDialog.value) {
                     CuadroEliminar(onEliminarEquipo, showDialog, equipo)
                 }
+
+                if (showDialogListaIntegrantes.value) {
+                    CuadroEliminarIntegrante(showDialogListaIntegrantes = showDialogListaIntegrantes)
+
+                }
             }
-        }
+
     }
 
 
@@ -293,7 +275,74 @@ private fun CuadroEliminar(onEliminarEquipo: (Equipos) -> Unit, showDialog: Muta
     )
 }
 
+@Composable
+private fun CuadroEliminarIntegrante(showDialogListaIntegrantes: MutableState<Boolean>){
+    AlertDialog(
+        icon = {
+            Icon(Icons.Filled.Info, contentDescription = "Example Icon")
+        },
+        title = {
+            Text(text = "Eliminar Integrante")
+        },
+        text = {
+            Text(text = "¿Esta seguro que desea eliminar este integrante de este equipo?")
+        },
+        onDismissRequest = {
+            showDialogListaIntegrantes.value = false
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showDialogListaIntegrantes.value = false
+                }
+            ) {
+                Text("Eliminar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    showDialogListaIntegrantes.value = false
+                }
+            ) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
 
+@Composable
+fun escribirIntegrantes(listaIntegrantes: List<Usuarios>,
+                        viewModel: usuarioViewModel = viewModel(),
+                        showDialogListaIntegrantes: MutableState<Boolean>
+){
+    Log.d("Detalles Equipo (escribirIntegrantes)", "Tamaño de Lista Integrantes: ${listaIntegrantes.size}")
+    LazyColumn()
+    {
+        items(listaIntegrantes) { integrante ->
+            Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Text(
+                    text = integrante.nombre
+                )
+                IconButton(
+                    onClick = {
+                        //CAMBIAR POR UN CUADRO DE SELECCION
+                        showDialogListaIntegrantes.value = true
+                        //viewModel.eliminarUsuario(integrante)
+                    }
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, "")
+                }
+            }
+        }
+    }
+}
 
 /*
 @Preview(showBackground = true)

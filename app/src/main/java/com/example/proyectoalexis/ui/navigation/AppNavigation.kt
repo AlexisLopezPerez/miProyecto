@@ -146,7 +146,8 @@ fun AppNavigation(){
                                 onEditarEquipo = {idEquipo ->
                                     navController.navigate("editarEquipo/$idEquipo")
                                 },
-                                equipo = equipo
+                                equipo = equipo,
+                                viewModel = usuarioViewModel
                             )
                         }
                     }

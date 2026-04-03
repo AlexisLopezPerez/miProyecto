@@ -91,7 +91,7 @@ fun Equipos(
     val scope = rememberCoroutineScope()
     val contexto = LocalContext.current
     val listaEquipos by viewModel.listaDeEquipos.collectAsState(initial = emptyList())
-
+    Log.d("Equipos (main)","Tamaño de Lista de Equipos: ${listaEquipos.size}")
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -180,6 +180,7 @@ fun Equipos(
 
 @Composable
 private fun listarEquipos(listaEquipos: List<Equipos>, onDetallesEquipo: (Int) -> Unit){
+    Log.d("Equipos (listarEquipos)","Tamaño de Lista de Equipos: ${listaEquipos.size}")
     LazyColumn()
     {
         items(listaEquipos){
