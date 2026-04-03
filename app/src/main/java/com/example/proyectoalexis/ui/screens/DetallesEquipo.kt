@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
@@ -74,12 +75,8 @@ fun DetallesEquipo(
     val nombreEquipoString = equipo.nombre
     val descripcionEquipoString = equipo.descripcion
     val currentImageUri = Uri.parse(equipo.imagenUri)
-    val listaIntegrantes by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
-    /*val listaPrueba by integrantesViewModel.getIntegrantesByIdEquipo(equipo.idEquipo)
-
-    listaPrueba.forEach {nose ->
-        Log.d("ListaPrueba", "${nose?.nombre}")
-    }*/
+    val listaIntegrantes by viewModel.getIntegrantes(equipo.idEquipo).collectAsStateWithLifecycle(initialValue = emptyList())
+    //val listaIntegrantes by viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
 
     //viewModel.listaDeUsuarios.collectAsState(initial = emptyList())
     Log.d("Detalles Equipo (main)", "Tamaño de Lista Integrantes: ${listaIntegrantes.size}")

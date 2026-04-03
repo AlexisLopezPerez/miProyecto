@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.datos.UsuariosDAO
 import com.example.proyectoalexis.datos.datosIniciales.DatosUsuarios
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.stateIn
@@ -18,10 +19,13 @@ class usuarioViewModel(private val usuariosDAO: UsuariosDAO, private val context
         initialValue = emptyList<Usuarios>()
     )
 
+    fun getIntegrantes(idEquipo: Int): Flow<List<Usuarios>> {
+        return usuariosDAO.getUsuariosByIdEquipo(idEquipo)
+    }
+
     fun getUsuarioById(idUsuario: Int): Usuarios?{
         return listaDeUsuarios.value.find { it.idUsuario == idUsuario }
     }
-
     fun actualizarUsuario(usuarioActualizado: Usuarios){
         viewModelScope.launch {
             usuariosDAO.update(usuarioActualizado)

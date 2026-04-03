@@ -12,13 +12,6 @@ class DatosIntegrantes() {
             IntegrantesEquipo(
                 idEquipo = 1,
                 idUsuario = 2
-            ),IntegrantesEquipo(
-                idEquipo = 1,
-                idUsuario = 3
-            ),
-            IntegrantesEquipo(
-                idEquipo = 2,
-                idUsuario = 1
             ),
             IntegrantesEquipo(
                 idEquipo = 2,

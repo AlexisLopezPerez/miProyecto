@@ -13,6 +13,14 @@ interface UsuariosDAO{
     @Query("SELECT * FROM usuarios")
     fun getAllUsuarios(): Flow<List<Usuarios>>
 
+    @Query("""
+           SELECT usuarios.* 
+            FROM usuarios INNER JOIN integrantesEquipo 
+ON usuarios.idUsuario = integrantesEquipo.idUsuario
+    WHERE IntegrantesEquipo.idEquipo = :idEquipo
+        """)
+    fun getUsuariosByIdEquipo(idEquipo: Int): Flow<List<Usuarios>>
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(usuario: Usuarios)
 
