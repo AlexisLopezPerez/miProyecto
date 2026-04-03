@@ -1,7 +1,9 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +62,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Equipos
+import com.example.proyectoalexis.datos.IntegrantesEquipo
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.viewModel.integrantesViewModel
 import com.example.proyectoalexis.viewModel.usuarioViewModel
@@ -75,7 +79,7 @@ fun DetallesEquipo(
     integrantesViewModel: integrantesViewModel = viewModel(),
     equipo: Equipos
 ) {
-
+    val contexto = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     val showDialogListaIntegrantes = remember { mutableStateOf(false) }
     var showBottomSheet = remember { mutableStateOf(false) }
@@ -244,7 +248,8 @@ fun DetallesEquipo(
 
                     // } }
                     if(showBottomSheet.value){
-                        MostrarUsuariosAgregar(showBottomSheet, sheetState, listaUsuarios, listaIntegrantes)
+                        MostrarUsuariosAgregar(showBottomSheet, sheetState, listaUsuarios, listaIntegrantes, equipo,
+                            contexto = contexto, integrantesViewModel = integrantesViewModel)
                     }
 
                 }
@@ -373,7 +378,10 @@ fun MostrarUsuariosAgregar(
     showBottomSheet: MutableState<Boolean>,
     sheetState: SheetState,
     listaUsuarios: List<Usuarios>,
-    listaIntegrantes: List<Usuarios>
+    listaIntegrantes: List<Usuarios>,
+    equipo: Equipos,
+    integrantesViewModel: integrantesViewModel,
+    contexto: Context
 )
 {
     ModalBottomSheet(
@@ -413,7 +421,14 @@ fun MostrarUsuariosAgregar(
                     }
                     Button(
                         onClick = {
+                            val integranteNuevo = IntegrantesEquipo(idEquipo = equipo.idEquipo, idUsuario = usuario.idUsuario)
+                            integrantesViewModel.agregarIntegrante(integranteNuevo)
                             showBottomSheet.value = false
+                            Toast.makeText(
+                                contexto,
+                                "El integrante ha sido agregado",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         },
                         enabled = !(EstaEsteUsaurioEnEsteEquipo(usuario.idUsuario, listaIntegrantes))
                     )
