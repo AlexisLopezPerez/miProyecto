@@ -11,12 +11,12 @@ class DatosEquipos(private val contexto: Context) {
             Equipos(
                 nombre = "Empresarial",
                 descripcion = "Equipo empresarial",
-                imagenUri = "android.resource://$packageName/${R.drawable.hawaiana}"
+                imagenUri = "android.resource://$packageName/${R.drawable.empresarial}"
             ),
             Equipos(
                 nombre = "Academico",
                 descripcion = "Equipo Academico",
-                imagenUri = "android.resource://$packageName/${R.drawable.pepperoni}"
+                imagenUri = "android.resource://$packageName/${R.drawable.academico}"
             )
         )
     }

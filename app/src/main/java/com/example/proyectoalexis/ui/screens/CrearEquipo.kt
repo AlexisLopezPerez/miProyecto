@@ -75,7 +75,7 @@ fun CrearEquipo(
     var descripcionEquipo by remember { mutableStateOf("") }
     var contexto = LocalContext.current
     var packageName = contexto.packageName
-    var imagenDefaultUri by remember { mutableStateOf(Uri.parse("android.resource://$packageName/${R.drawable.pepperoni}")) }
+    var imagenDefaultUri by remember { mutableStateOf(Uri.parse("android.resource://$packageName/${R.drawable.equipo_default}")) }
     var galeryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
