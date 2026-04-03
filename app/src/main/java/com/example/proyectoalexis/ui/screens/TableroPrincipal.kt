@@ -69,6 +69,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.navigation.Screens
 import kotlinx.coroutines.launch
 
@@ -107,13 +108,13 @@ fun TableroPrincipal(
                 NavigationDrawerItem(
                     label = { Text( "Equipos" ) },
                     selected = false,
-                    onClick = onEquipos,
+                    onClick =  onEquipos ,
                     icon = {Icon(Icons.Filled.Contacts, "")}
                 )
                 NavigationDrawerItem(
                     label = { Text( "Perfil" ) },
                     selected = false,
-                    onClick = onDetallesPerfil,
+                    onClick =  onDetallesPerfil ,
                     icon = {Icon(Icons.Filled.AccountCircle, "")}
                 )
                 HorizontalDivider(Modifier.padding(vertical = 8.dp))

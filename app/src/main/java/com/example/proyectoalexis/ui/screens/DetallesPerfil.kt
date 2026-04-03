@@ -65,6 +65,7 @@ import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Usuarios
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,13 +74,14 @@ fun DetallesPerfil(
     onEquipos: () -> Unit,
     onLogin: () -> Unit,
     onEditarPerfil: () -> Unit,
+    usuarioActual: Usuarios
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val showDialog = remember { mutableStateOf(false) }
-    val usernameString = stringResource(R.string.username)
-    val passwordString = stringResource(R.string.password)
-    val correoString = stringResource(R.string.correo)
+    val usernameString = usuarioActual.nombre
+    val passwordString = usuarioActual.password
+    val correoString = usuarioActual.correo
 
     ModalNavigationDrawer(
         drawerState = drawerState,

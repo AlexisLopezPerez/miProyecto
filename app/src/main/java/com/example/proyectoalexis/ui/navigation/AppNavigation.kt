@@ -6,6 +6,10 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyectoalexis.datos.AppDatabase
 import com.example.proyectoalexis.datos.Equipos
+import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.screens.CrearEquipo
 import com.example.proyectoalexis.ui.screens.CrearTarea
 import com.example.proyectoalexis.ui.screens.DetallesEquipo
@@ -95,7 +100,7 @@ fun AppNavigation(){
                                 if (usuario != null ){
                                     val passwordCorrecto: Boolean = usuarioViewModel.comprobarContraseña(usuario, password)
 
-                                    if (passwordCorrecto) navController.navigate(Screens.TableroPrincipal.route)
+                                    if (passwordCorrecto) navController.navigate("tableroPrincipal/${usuario.idUsuario}")
                                     else {
                                         Toast.makeText(
                                             contexto,
@@ -141,23 +146,37 @@ fun AppNavigation(){
                         )
                     }
 
-                    composable(route = Screens.TableroPrincipal.route) {
+                    composable(
+                        route = Screens.TableroPrincipal.route,
+                        arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
+                    ) { backStakeEntry ->
+                        val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
+                        val usuarioActual = usuarioViewModel.getUsuarioById(idUsuario)
+
                         TableroPrincipal(
                             onLogin = {navController.navigate(Screens.Login.route)},
                             onEquipos = {navController.navigate(Screens.Equipos.route)},
                             onCrearTarea = {navController.navigate(Screens.CrearTarea.route)},
                             onEditarTarea = {navController.navigate(Screens.EditarTarea.route)},
                             onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
-                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)}
+                            onDetallesPerfil = {
+                                navController.navigate("detallesPerfil/$idUsuario")
+                            }
                         )
                     }
 
-                    composable(route = Screens.DetallesPerfil.route){
+                    composable(route = Screens.DetallesPerfil.route,
+                            arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
+                    ) { backStakeEntry ->
+                        val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
+                        val usuarioActual: Usuarios = usuarioViewModel.getUsuarioById(idUsuario)!!
+
                         DetallesPerfil(
                             onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
                             onEquipos = {navController.navigate(Screens.Equipos.route)},
                             onLogin = {navController.navigate(Screens.Login.route)},
-                            onEditarPerfil = {navController.navigate(Screens.EditarPerfil.route)}
+                            onEditarPerfil = {navController.navigate(Screens.EditarPerfil.route)},
+                            usuarioActual = usuarioActual
                         )
                     }
 
