@@ -3,6 +3,7 @@ package com.example.proyectoalexis.ui.screens
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -170,9 +171,27 @@ fun CrearEquipo(
                 {
                     Button(
                         onClick = {
-                            val equipoACrear = Equipos(nombre = nombreEquipo, descripcion = descripcionEquipo, imagenUri = imagenDefaultUri.toString())
+                            if (nombreEquipo != "" && descripcionEquipo != "") {
+                                val equipoACrear = Equipos(
+                                    nombre = nombreEquipo,
+                                    descripcion = descripcionEquipo,
+                                    imagenUri = imagenDefaultUri.toString()
+                                )
 
-                            onEquipos(equipoACrear)
+                                onEquipos(equipoACrear)
+
+                                Toast.makeText(
+                                    contexto,
+                                    "El equipo fue creado exitosamente",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }else{
+                                Toast.makeText(
+                                    contexto,
+                                    "Hay campos vacios. Porfavor, rellenelos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         },
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,

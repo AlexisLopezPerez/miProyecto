@@ -1,6 +1,7 @@
 package com.example.proyectoalexis.ui.screens
 
 import android.R
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -52,9 +54,12 @@ import com.example.proyectoalexis.ui.theme.backgroundDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onTableroPrincipal: () -> Unit, onRegistro: () -> Unit) {
+fun LoginScreen(onTableroPrincipal: (String, String) -> Unit,
+                onRegistro: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val contexto = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -71,7 +76,9 @@ fun LoginScreen(onTableroPrincipal: () -> Unit, onRegistro: () -> Unit) {
     ) { innerPading ->
         Box(modifier = Modifier.padding(innerPading)) {
             Column(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primary),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -103,7 +110,17 @@ fun LoginScreen(onTableroPrincipal: () -> Unit, onRegistro: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 OutlinedButton(
-                    onClick = onTableroPrincipal,
+                    onClick = {
+                        if (username != "" && password != ""){
+                            onTableroPrincipal(username, password)
+                        }else{
+                            Toast.makeText(
+                                contexto,
+                                "Hay campos vacios, porfavor rellenelos",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                              },
                     border = BorderStroke(1.dp, Color.White)
                 ) {
                     Text(

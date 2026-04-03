@@ -26,6 +26,20 @@ class usuarioViewModel(private val usuariosDAO: UsuariosDAO, private val context
     fun getUsuarioById(idUsuario: Int): Usuarios?{
         return listaDeUsuarios.value.find { it.idUsuario == idUsuario }
     }
+
+    fun getUsuarioByUsername(username: String): Usuarios?{
+        return listaDeUsuarios.value.find { it.nombre == username }
+    }
+
+    fun comprobarContraseña(usuario: Usuarios, password: String): Boolean{
+        if (usuario.password == password){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
     fun actualizarUsuario(usuarioActualizado: Usuarios){
         viewModelScope.launch {
             usuariosDAO.update(usuarioActualizado)

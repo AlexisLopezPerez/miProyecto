@@ -2,6 +2,7 @@ package com.example.proyectoalexis.ui.navigation
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -88,7 +89,30 @@ fun AppNavigation(){
                     //Paso 3 Declarar las rutas de navegacion
                     composable(route= Screens.Login.route){
                         LoginScreen(
-                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onTableroPrincipal = { username, password ->
+                                val usuario = usuarioViewModel.getUsuarioByUsername(username)
+
+                                if (usuario != null ){
+                                    val passwordCorrecto: Boolean = usuarioViewModel.comprobarContraseña(usuario, password)
+
+                                    if (passwordCorrecto) navController.navigate(Screens.TableroPrincipal.route)
+                                    else {
+                                        Toast.makeText(
+                                            contexto,
+                                            "La contraseña es incorrecta",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }else{
+                                    Toast.makeText(
+                                        contexto,
+                                        "El usuario no es valido",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+
+                                                 },
                             onRegistro = {navController.navigate(Screens.Registro.route)}
                         )
                     }
