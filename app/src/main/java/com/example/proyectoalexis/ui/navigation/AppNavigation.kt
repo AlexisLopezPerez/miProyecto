@@ -36,6 +36,8 @@ import com.example.proyectoalexis.ui.screens.TableroPrincipal
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import com.example.proyectoalexis.viewModel.equipoViewModel
 import com.example.proyectoalexis.viewModel.equipoViewModelFactory
+import com.example.proyectoalexis.viewModel.usuarioViewModel
+import com.example.proyectoalexis.viewModel.usuarioViewModelFactory
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,9 +50,13 @@ fun AppNavigation(){
 
     val db = AppDatabase.getInstance(contexto)
 
-    val factory = equipoViewModelFactory(db.equiposDAO(), contexto.applicationContext)
+    val factoryEquipo = equipoViewModelFactory(db.equiposDAO(), contexto.applicationContext)
 
-    val equipoViewModel: equipoViewModel = viewModel(factory = factory)
+    val equipoViewModel: equipoViewModel = viewModel(factory = factoryEquipo)
+
+    val factoryUsuario = usuarioViewModelFactory(db.usuariosDAO(), contexto.applicationContext)
+
+    val usuarioViewModel: usuarioViewModel = viewModel(factory = factoryUsuario)
 
         /*Scaffold(
             topBar = {

@@ -1,7 +1,11 @@
 package com.example.proyectoalexis.datos
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "usuarios")
 data class Usuarios(
-    val idUsuario: Int,
+    @PrimaryKey(autoGenerate = true) val idUsuario: Int = 0,
     val nombre: String,
     val correo: String,
     val password: String
