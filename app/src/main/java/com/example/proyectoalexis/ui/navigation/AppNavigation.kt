@@ -181,7 +181,8 @@ fun AppNavigation(){
                             onDetallesPerfil = {
                                 navController.navigate("detallesPerfil/$idUsuario")
                             },
-                            tareasViewModel = tareasViewModel
+                            tareasViewModel = tareasViewModel,
+                            equiposViewModel = equipoViewModel
                         )
                     }
 

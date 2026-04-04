@@ -75,6 +75,7 @@ import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.navigation.Screens
+import com.example.proyectoalexis.viewModel.equipoViewModel
 import com.example.proyectoalexis.viewModel.tareasViewModel
 import kotlinx.coroutines.launch
 
@@ -87,7 +88,8 @@ fun TableroPrincipal(
     onCrearTarea: () -> Unit,
     onDetallesTarea: () -> Unit,
     onEditarTarea: () -> Unit,
-    tareasViewModel: tareasViewModel = viewModel()
+    tareasViewModel: tareasViewModel = viewModel(),
+    equiposViewModel: equipoViewModel = viewModel()
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -179,7 +181,7 @@ fun TableroPrincipal(
             LazyColumn (modifier = Modifier.fillMaxSize())
             {
                 items(listaTareas){ tarea ->
-                    TarjetaTarea(showBottomSheet, tarea)
+                    TarjetaTarea(showBottomSheet, tarea, equiposViewModel)
                 }
             }
             if (showDialog.value) {
@@ -242,7 +244,7 @@ fun TableroPrincipal(
     }
 
     @Composable
-    fun TarjetaTarea(showBottomSheet: MutableState<Boolean>, tarea: Tareas ) {
+    fun TarjetaTarea(showBottomSheet: MutableState<Boolean>, tarea: Tareas, equipoViewModel: equipoViewModel ) {
         var checked by remember() { mutableStateOf(false) }
 
 
@@ -279,7 +281,7 @@ fun TableroPrincipal(
                     }
                     Spacer(Modifier.height(10.dp))
                     Text(
-                        text = "${tarea.idEquipo}",
+                        text = equipoViewModel.getNombreEquipoById(tarea.idEquipo).toString(),
                         modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
                     )
                     Spacer(Modifier.height(10.dp))
