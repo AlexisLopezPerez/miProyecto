@@ -175,7 +175,9 @@ fun AppNavigation(){
                             onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
                             onEquipos = {navController.navigate(Screens.Equipos.route)},
                             onLogin = {navController.navigate(Screens.Login.route)},
-                            onEditarPerfil = {navController.navigate(Screens.EditarPerfil.route)},
+                            onEditarPerfil = {
+                                navController.navigate("editarPerfil/$idUsuario")
+                                             },
                             usuarioActual = usuarioActual
                         )
                     }
@@ -211,10 +213,18 @@ fun AppNavigation(){
                         )
                     }
 
-                    composable(route = Screens.EditarPerfil.route){
+                    composable(route = Screens.EditarPerfil.route,
+                            arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
+                    ) { backStakeEntry ->
+                        val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
+                        val usuarioActual: Usuarios = usuarioViewModel.getUsuarioById(idUsuario)!!
                         EditarPerfil(
                             onGoBack = {navController.popBackStack()},
-                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)}
+                            onDetallesPerfil = { usuarioAActualizar ->
+                                usuarioViewModel.actualizarUsuario(usuarioAActualizar)
+                                navController.popBackStack()
+                                               },
+                            usuarioActual = usuarioActual
                         )
                     }
 

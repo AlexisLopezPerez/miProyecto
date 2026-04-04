@@ -1,5 +1,7 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,13 +48,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
@@ -61,16 +66,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditarPerfil(
     onGoBack: () -> Unit,
-    onDetallesPerfil: () -> Unit
+    onDetallesPerfil: (Usuarios) -> Unit,
+    usuarioActual: Usuarios
 ) {
 
-    val usernameString = stringResource(R.string.username)
-    val passwordString = stringResource(R.string.password)
-    val correoString = stringResource(R.string.correo)
-    var username by remember { mutableStateOf(usernameString) }
-    var correo by remember { mutableStateOf(correoString) }
-    var password by remember { mutableStateOf(passwordString) }
+    var username by remember { mutableStateOf(usuarioActual.nombre) }
+    var correo by remember { mutableStateOf(usuarioActual.correo) }
+    var password by remember { mutableStateOf(usuarioActual.password) }
 
+    val contexto = LocalContext.current
 
         Scaffold(
             topBar = {
@@ -99,18 +103,28 @@ fun EditarPerfil(
             Box(modifier = Modifier.padding(innerPading))
             {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(40.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(40.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Image(
-                        painter = painterResource(R.drawable.pepperoni),
-                        modifier = Modifier.height(200.dp).width(200.dp).padding(bottom = 60.dp),
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop
+                    AsyncImage(
+                        model = usuarioActual.imagenUri,
+                        contentDescription = usuarioActual?.nombre,
+                        modifier = Modifier
+                            .height(200.dp)
+                            .width(200.dp)
+                            .padding(bottom = 60.dp),
+                        contentScale = ContentScale.Crop,
+                        onError = { error ->
+                            Log.e(
+                                "Pantalla Detalles Perfil, ${usuarioActual?.nombre}",
+                                "Error al cargar ${error.result.throwable}"
+                            )
+                        }
                     )
-
                     OutlinedTextField(
                         value = username,
                         onValueChange = { username = it },
@@ -119,7 +133,7 @@ fun EditarPerfil(
                     Spacer(modifier = Modifier.height(30.dp))
                     OutlinedTextField(
                         value = correo,
-                        onValueChange = { username = it },
+                        onValueChange = { correo = it },
                         label = { Text("Correo") }
                     )
                     Spacer(modifier = Modifier.height(30.dp))
@@ -136,7 +150,21 @@ fun EditarPerfil(
                     )
                     {
                         Button(
-                            onClick = onDetallesPerfil,
+                            onClick = {
+                                if (username != "" && password != "" && correo != "") {
+                                    val usuarioAActualizar = usuarioActual.copy(
+                                        nombre = username, password = password,
+                                        correo = correo
+                                    )
+                                    onDetallesPerfil(usuarioAActualizar)
+                                }else{
+                                    Toast.makeText(
+                                        contexto,
+                                        "Hay campos vacios, rellenelos porfavor",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                      },
                             colors = ButtonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White,

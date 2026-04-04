@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
@@ -163,14 +165,20 @@ fun DetallesPerfil(
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Image(
-                        painter = painterResource(R.drawable.hawaiana),
-                        contentDescription = "",
+                    AsyncImage(
+                        model = usuarioActual.imagenUri,
+                        contentDescription = usuarioActual?.nombre,
                         modifier = Modifier
                             .height(200.dp)
                             .width(200.dp)
                             .padding(bottom = 60.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        onError = { error ->
+                            Log.e(
+                                "Pantalla Detalles Perfil, ${usuarioActual?.nombre}",
+                                "Error al cargar ${error.result.throwable}"
+                            )
+                        }
                     )
                     Card() {
                         Column(modifier = Modifier.padding(10.dp)) {
