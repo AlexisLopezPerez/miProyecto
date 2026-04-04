@@ -1,6 +1,7 @@
 package com.example.proyectoalexis.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.Usuarios
@@ -43,6 +44,16 @@ class usuarioViewModel(private val usuariosDAO: UsuariosDAO, private val context
     fun actualizarUsuario(usuarioActualizado: Usuarios){
         viewModelScope.launch {
             usuariosDAO.update(usuarioActualizado)
+        }
+    }
+
+    fun eliminarUsuarioWhenNotNull(usuarioAEliminar: Usuarios?){
+        viewModelScope.launch {
+            if (usuarioAEliminar != null){
+                usuariosDAO.delete(usuarioAEliminar)
+                Log.i("usuarioViewModel (eliminarUsuarioWhenNotNull)","Usuario a eliminar id: ${usuarioAEliminar?.idUsuario?:"not found"}")
+            }
+            else Log.w("usuarioViewModel (eliminarUsuarioWhenNotNull)","El usuario a eliminar esta vacio :(")
         }
     }
 

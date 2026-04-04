@@ -169,16 +169,23 @@ fun AppNavigation(){
                             arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
                     ) { backStakeEntry ->
                         val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
-                        val usuarioActual: Usuarios = usuarioViewModel.getUsuarioById(idUsuario)!!
+                        val usuarioActual: Usuarios? = usuarioViewModel.getUsuarioById(idUsuario)
 
                         DetallesPerfil(
                             onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
                             onEquipos = {navController.navigate(Screens.Equipos.route)},
-                            onLogin = {navController.navigate(Screens.Login.route)},
+                            onLogin = { usuarioAEliminar ->
+                                usuarioViewModel.eliminarUsuarioWhenNotNull(usuarioAEliminar)
+                                navController.navigate(Screens.Login.route)
+                                Log.d("AppNavigator (Detalles Perfil)", "Usuario a eliminar id: ${usuarioAEliminar?.idUsuario?:"not found"}")
+
+                                      },
                             onEditarPerfil = {
+
                                 navController.navigate("editarPerfil/$idUsuario")
                                              },
-                            usuarioActual = usuarioActual
+                            usuarioActual = usuarioActual,
+                            onLogout = {navController.navigate(Screens.Login.route)}
                         )
                     }
 

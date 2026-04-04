@@ -74,16 +74,17 @@ import com.example.proyectoalexis.datos.Usuarios
 fun DetallesPerfil(
     onTableroPrincipal: () -> Unit,
     onEquipos: () -> Unit,
-    onLogin: () -> Unit,
+    onLogin: (Usuarios?) -> Unit,
     onEditarPerfil: () -> Unit,
-    usuarioActual: Usuarios
+    usuarioActual: Usuarios?,
+    onLogout: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val showDialog = remember { mutableStateOf(false) }
-    val usernameString = usuarioActual.nombre
-    val passwordString = usuarioActual.password
-    val correoString = usuarioActual.correo
+    val usernameString = usuarioActual?.nombre?:""
+    val passwordString = usuarioActual?.password?:""
+    val correoString = usuarioActual?.correo?:""
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -118,7 +119,7 @@ fun DetallesPerfil(
                 NavigationDrawerItem(
                     label = { Text( "Cerrar Sesión" ) },
                     selected = false,
-                    onClick = onLogin,
+                    onClick = onLogout,
                     icon = {Icon(Icons.Filled.Logout, "")}
                 )
             }
@@ -166,7 +167,7 @@ fun DetallesPerfil(
                 )
                 {
                     AsyncImage(
-                        model = usuarioActual.imagenUri,
+                        model = usuarioActual?.imagenUri,
                         contentDescription = usuarioActual?.nombre,
                         modifier = Modifier
                             .height(200.dp)
@@ -245,7 +246,10 @@ fun DetallesPerfil(
                         },
                         confirmButton = {
                             TextButton(
-                                onClick = onLogin
+                                onClick = {
+                                    Log.d("Detalles Perfil (Eliminar Perfil)","${usuarioActual?.idUsuario?:"not found"}")
+                                    onLogin(usuarioActual)
+                                }
 
 
                             ) {
