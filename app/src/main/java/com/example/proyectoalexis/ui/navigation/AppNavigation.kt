@@ -44,6 +44,8 @@ import com.example.proyectoalexis.viewModel.equipoViewModel
 import com.example.proyectoalexis.viewModel.equipoViewModelFactory
 import com.example.proyectoalexis.viewModel.integrantesViewModel
 import com.example.proyectoalexis.viewModel.integrantesViewModelFactory
+import com.example.proyectoalexis.viewModel.tareasViewModel
+import com.example.proyectoalexis.viewModel.tareasViewModelFactory
 import com.example.proyectoalexis.viewModel.usuarioViewModel
 import com.example.proyectoalexis.viewModel.usuarioViewModelFactory
 
@@ -69,6 +71,10 @@ fun AppNavigation(){
     val factoryIntegrantes = integrantesViewModelFactory(db.integrantesDAO(), contexto.applicationContext)
 
     val integrantesViewModel: integrantesViewModel = viewModel(factory = factoryIntegrantes)
+
+    val factoryTareas = tareasViewModelFactory(db.tareasDAO(), contexto.applicationContext)
+
+    val tareasViewModel: tareasViewModel = viewModel(factory = factoryTareas)
 
         /*Scaffold(
             topBar = {

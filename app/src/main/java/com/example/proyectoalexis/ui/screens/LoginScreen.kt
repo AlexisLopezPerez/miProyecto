@@ -92,7 +92,8 @@ fun LoginScreen(onTableroPrincipal: (String, String) -> Unit,
                         unfocusedBorderColor = Color.Black,
                         cursorColor = Color.Black,
                         focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedLabelColor = Color.White
                     ),
                 )
                 Spacer(modifier = Modifier.height(40.dp))
@@ -105,7 +106,8 @@ fun LoginScreen(onTableroPrincipal: (String, String) -> Unit,
                         unfocusedBorderColor = Color.Black,
                         cursorColor = Color.Black,
                         focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedLabelColor = Color.White
                     )
                 )
                 Spacer(modifier = Modifier.height(40.dp))
