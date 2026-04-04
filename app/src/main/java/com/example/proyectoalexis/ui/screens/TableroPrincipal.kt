@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.outlined.List
@@ -65,12 +66,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.navigation.Screens
+import com.example.proyectoalexis.viewModel.tareasViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +86,8 @@ fun TableroPrincipal(
     onLogin: () -> Unit,
     onCrearTarea: () -> Unit,
     onDetallesTarea: () -> Unit,
-    onEditarTarea: () -> Unit
+    onEditarTarea: () -> Unit,
+    tareasViewModel: tareasViewModel = viewModel()
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -91,6 +97,8 @@ fun TableroPrincipal(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
+
+    val listaTareas by tareasViewModel.listaDeTareas.collectAsState(initial = emptyList())
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -168,11 +176,11 @@ fun TableroPrincipal(
     { innerPading ->
 
         Box(modifier = Modifier.padding(innerPading)) {
-            Column(modifier = Modifier.fillMaxSize())
+            LazyColumn (modifier = Modifier.fillMaxSize())
             {
-                TarjetaTarea(showBottomSheet)
-                TarjetaTarea(showBottomSheet)
-                TarjetaTarea(showBottomSheet)
+                items(listaTareas){ tarea ->
+                    TarjetaTarea(showBottomSheet, tarea)
+                }
             }
             if (showDialog.value) {
                 CuadroEliminar(showDialog)
@@ -234,7 +242,7 @@ fun TableroPrincipal(
     }
 
     @Composable
-    fun TarjetaTarea(showBottomSheet: MutableState<Boolean> ) {
+    fun TarjetaTarea(showBottomSheet: MutableState<Boolean>, tarea: Tareas ) {
         var checked by remember() { mutableStateOf(false) }
 
 
@@ -252,7 +260,10 @@ fun TableroPrincipal(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Tarea 1", style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = tarea.nombre, style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
+                        )
                         IconButton(
                             onClick = {
                                 showBottomSheet.value = true
@@ -267,7 +278,10 @@ fun TableroPrincipal(
 
                     }
                     Spacer(Modifier.height(10.dp))
-                    Text(text = stringResource(R.string.nombreEquipo))
+                    Text(
+                        text = "${tarea.idEquipo}",
+                        modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
+                    )
                     Spacer(Modifier.height(10.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -275,7 +289,7 @@ fun TableroPrincipal(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.descripcionEquipo),
+                            text = tarea.descripcion,
                             modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
                         )
                         Checkbox(

@@ -180,7 +180,8 @@ fun AppNavigation(){
                             onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
                             onDetallesPerfil = {
                                 navController.navigate("detallesPerfil/$idUsuario")
-                            }
+                            },
+                            tareasViewModel = tareasViewModel
                         )
                     }
 
