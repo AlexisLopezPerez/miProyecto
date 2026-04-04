@@ -132,15 +132,25 @@ fun AppNavigation(){
                         )
                     }
 
-                    composable(route = Screens.Equipos.route){
+                    composable(route = Screens.Equipos.route,
+                            arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
+                    ) { backStakeEntry ->
+                        val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
+                        val usuarioActual = usuarioViewModel.getUsuarioById(idUsuario)
                         Equipos(
                             onLogin = {navController.navigate(Screens.Login.route)},
-                            onDetallesPerfil = {navController.navigate(Screens.DetallesPerfil.route)},
+                            onDetallesPerfil = {
+                                Log.d("AppNavigation","(Equipos) onDetallesPerfil//ruta${Screens.DetallesPerfil.createRoute(idUsuario)}")
+                                navController.navigate(Screens.DetallesPerfil.createRoute(idUsuario))
+                                               },
                             onDetallesEquipo = {idEquipo ->
-                                Log.d("AppNavigation, DetallesEquipo","ruta: editarEquipo/$idEquipo")
+                                Log.d("AppNavigation","(Equipos) onDetallesEquipo//ruta: editarEquipo/$idEquipo")
                                 navController.navigate("detallesEquipo/$idEquipo")
                                                },
-                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
+                            onTableroPrincipal = {
+                                Log.d("AppNavigation","(Equipos) onDetallesEquipo//ruta${Screens.TableroPrincipal.createRoute(idUsuario)}")
+                                navController.navigate(Screens.TableroPrincipal.createRoute(idUsuario))
+                                                 },
                             onCrearEquipo = {navController.navigate(Screens.CrearEquipo.route)},
                             viewModel = equipoViewModel
                         )
@@ -155,7 +165,10 @@ fun AppNavigation(){
 
                         TableroPrincipal(
                             onLogin = {navController.navigate(Screens.Login.route)},
-                            onEquipos = {navController.navigate(Screens.Equipos.route)},
+                            onEquipos = {
+                                Log.d("AppNavigation","(TableroPrincipal) onEquipos//ruta${Screens.Equipos.createRoute(idUsuario)}")
+                                navController.navigate(Screens.Equipos.createRoute(idUsuario))
+                                        },
                             onCrearTarea = {navController.navigate(Screens.CrearTarea.route)},
                             onEditarTarea = {navController.navigate(Screens.EditarTarea.route)},
                             onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
@@ -172,8 +185,14 @@ fun AppNavigation(){
                         val usuarioActual: Usuarios? = usuarioViewModel.getUsuarioById(idUsuario)
 
                         DetallesPerfil(
-                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)},
-                            onEquipos = {navController.navigate(Screens.Equipos.route)},
+                            onTableroPrincipal = {
+                                Log.d("AppNavigation","(DetallesPerfil) onTableroPrincipal//ruta${Screens.TableroPrincipal.createRoute(idUsuario)}")
+                                navController.navigate(Screens.TableroPrincipal.createRoute(idUsuario))
+                                                 },
+                            onEquipos = {
+                                Log.d("AppNavigation","(DetallesPerfil) onEquipos//ruta${Screens.Equipos.createRoute(idUsuario)}")
+                                navController.navigate(Screens.Equipos.createRoute(idUsuario))
+                                        },
                             onLogin = { usuarioAEliminar ->
                                 usuarioViewModel.eliminarUsuarioWhenNotNull(usuarioAEliminar)
                                 navController.navigate(Screens.Login.route)

@@ -15,7 +15,9 @@ sealed class Screens (val route: String){
     data object EditarPerfil: Screens("editarPerfil/{idUsuario}"){
         fun createRoute(idUsuario: Int) = "editarPerfil/$idUsuario"
     }
-    data object Equipos: Screens("equipos")
+    data object Equipos: Screens("equipos/{idUsuario}"){
+        fun createRoute(idUsuario: Int) = "equipos/$idUsuario"
+    }
     data object CrearEquipo: Screens("crearEquipo")
     data object DetallesEquipo: Screens("detallesEquipo/{idEquipo}"){
         fun createRoute(idEquipo: Int) = "detallesEquipo/$idEquipo"
