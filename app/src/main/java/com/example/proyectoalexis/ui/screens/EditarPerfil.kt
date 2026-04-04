@@ -1,7 +1,11 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -73,8 +78,27 @@ fun EditarPerfil(
     var username by remember { mutableStateOf(usuarioActual.nombre) }
     var correo by remember { mutableStateOf(usuarioActual.correo) }
     var password by remember { mutableStateOf(usuarioActual.password) }
+    var currentImageUri by remember { mutableStateOf<Uri?>(Uri.parse(usuarioActual.imagenUri)) }
 
     val contexto = LocalContext.current
+    var galeryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null){
+            try {
+                //esto es para que android nos de permiso de acceder siempre a la imagen
+                val contentResolver = contexto.contentResolver
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+                //Hacer que el permiso persista
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+                currentImageUri = uri
+            }
+            catch (e: Exception){
+                currentImageUri = uri
+            }
+        }
+    }
 
         Scaffold(
             topBar = {
@@ -111,7 +135,7 @@ fun EditarPerfil(
                 )
                 {
                     AsyncImage(
-                        model = usuarioActual.imagenUri,
+                        model = currentImageUri,
                         contentDescription = usuarioActual?.nombre,
                         modifier = Modifier
                             .height(200.dp)
@@ -125,6 +149,15 @@ fun EditarPerfil(
                             )
                         }
                     )
+                    OutlinedButton(
+                        onClick = {
+                            galeryLauncher.launch("image/*")
+                        },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                    )
+                    {
+                        Text("Cambiar Foto")
+                    }
                     OutlinedTextField(
                         value = username,
                         onValueChange = { username = it },
@@ -154,7 +187,7 @@ fun EditarPerfil(
                                 if (username != "" && password != "" && correo != "") {
                                     val usuarioAActualizar = usuarioActual.copy(
                                         nombre = username, password = password,
-                                        correo = correo
+                                        correo = correo, imagenUri = currentImageUri.toString()
                                     )
                                     onDetallesPerfil(usuarioAActualizar)
                                 }else{
