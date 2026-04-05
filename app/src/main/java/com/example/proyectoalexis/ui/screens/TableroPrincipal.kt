@@ -1,6 +1,8 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.content.Context
 import android.util.Log.d
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,6 +64,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -69,6 +72,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyectoalexis.R
@@ -92,6 +96,7 @@ fun TableroPrincipal(
     equiposViewModel: equipoViewModel = viewModel()
 ) {
 
+    val contexto = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val showDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -181,61 +186,14 @@ fun TableroPrincipal(
             LazyColumn (modifier = Modifier.fillMaxSize())
             {
                 items(listaTareas){ tarea ->
-                    TarjetaTarea(showBottomSheet, tarea, equiposViewModel)
-                }
-            }
-            if (showDialog.value) {
-                CuadroEliminar(showDialog)
-            }
-
-            if(showBottomSheet.value){
-                ModalBottomSheet(
-                    modifier = Modifier.fillMaxHeight(),
-                    sheetState = sheetState,
-                    onDismissRequest = { showBottomSheet.value = false }
-                )
-                {
-                    Column(modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally)
-                    {
-                        TextButton(
-                            onClick = onDetallesTarea
+                    TarjetaTarea(showBottomSheet, tarea, equiposViewModel,
+                            onEditarTarea = onEditarTarea,
+                        onDetallesTarea = onDetallesTarea,
+                        sheetState = sheetState,
+                        showDialog = showDialog,
+                        contexto = contexto,
+                        tareasViewModel = tareasViewModel
                         )
-                        {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically) {
-                                Icon(imageVector = Icons.Filled.Info, "")
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text("Detalles")
-                            }
-                        }
-                        TextButton(
-                            onClick = onEditarTarea
-                        )
-                        {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically) {
-                                Icon(imageVector = Icons.Filled.Create, "")
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text("Editar")
-                            }
-                        }
-                        TextButton(
-                            onClick = {
-                                showDialog.value = true
-                            }
-                        )
-                        {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically) {
-                                Icon(imageVector = Icons.Filled.Delete, "")
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text("Eliminar")
-                            }
-                        }
-
-                    }
                 }
             }
         }
@@ -243,8 +201,17 @@ fun TableroPrincipal(
     }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun TarjetaTarea(showBottomSheet: MutableState<Boolean>, tarea: Tareas, equipoViewModel: equipoViewModel ) {
+    fun TarjetaTarea(showBottomSheet: MutableState<Boolean>,
+                     tarea: Tareas, equipoViewModel: equipoViewModel,
+                     sheetState: SheetState,
+                     onEditarTarea: () -> Unit,
+                     onDetallesTarea: () -> Unit,
+                     showDialog: MutableState<Boolean>,
+                     contexto: Context,
+                     tareasViewModel: tareasViewModel
+    ) {
         var checked by remember() { mutableStateOf(false) }
 
 
@@ -303,10 +270,26 @@ fun TableroPrincipal(
 
 
             }
+        if(showBottomSheet.value){
+            MostrarMenu(
+                sheetState = sheetState,
+                showBottomSheet = showBottomSheet,
+                onDetallesTarea = onDetallesTarea,
+                onEditarTarea = onEditarTarea,
+                showDialog = showDialog,
+                tarea = tarea,
+                contexto = contexto,
+                tareasViewModel = tareasViewModel
+            )
+        }
     }
 
 @Composable
-private fun CuadroEliminar(showDialog: MutableState<Boolean>){
+private fun CuadroEliminar(showDialog: MutableState<Boolean>,
+                           contexto: Context,
+                           tareasViewModel: tareasViewModel,
+                           tarea: Tareas
+){
     AlertDialog(
         icon = {
             Icon(Icons.Filled.Info, contentDescription = "Example Icon")
@@ -324,6 +307,12 @@ private fun CuadroEliminar(showDialog: MutableState<Boolean>){
             TextButton(
                 onClick = {
                     showDialog.value = false
+                    Toast.makeText(
+                        contexto,
+                        "La tarea se ha eliminado correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    tareasViewModel.eliminarTarea(tarea)
                     /*  CODIGO QUE ELIMINA LA TAREA */
                 }
             ) {
@@ -340,6 +329,74 @@ private fun CuadroEliminar(showDialog: MutableState<Boolean>){
             }
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MostrarMenu(
+    sheetState: SheetState,
+    showBottomSheet: MutableState<Boolean>,
+    onDetallesTarea: () -> Unit,
+    onEditarTarea: () -> Unit,
+    showDialog: MutableState<Boolean>,
+    contexto: Context,
+    tareasViewModel: tareasViewModel,
+    tarea: Tareas
+){
+    ModalBottomSheet(
+        modifier = Modifier.fillMaxHeight(),
+        sheetState = sheetState,
+        onDismissRequest = { showBottomSheet.value = false }
+    )
+    {
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            TextButton(
+                onClick = onDetallesTarea
+            )
+            {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Filled.Info, "")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text("Detalles")
+                }
+            }
+            TextButton(
+                onClick = onEditarTarea
+            )
+            {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Filled.Create, "")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text("Editar")
+                }
+            }
+            TextButton(
+                onClick = {
+                    showDialog.value = true
+                }
+            )
+            {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Filled.Delete, "")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text("Eliminar")
+                }
+            }
+            if (showDialog.value) {
+                CuadroEliminar(showDialog,
+                    contexto = contexto,
+                    tarea = tarea,
+                    tareasViewModel = tareasViewModel
+                    )
+            }
+        }
+    }
 }
 
 /*
