@@ -65,6 +65,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectoalexis.ui.navigation.Screens
@@ -72,12 +73,14 @@ import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Tareas
+import com.example.proyectoalexis.viewModel.equipoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetallesTarea(
     onGoBack: () -> Unit,
-    tarea: Tareas
+    tarea: Tareas,
+    equipoViewModel: equipoViewModel = viewModel()
 ) {
     val contexto = LocalContext.current
 
@@ -130,7 +133,7 @@ fun DetallesTarea(
                                 text = "Equipo:", style = MaterialTheme.typography.titleLarge
                             )
                             Text(
-                                text = nombreTarea //reemplazar por nombre de la tarea
+                                text = equipoViewModel.getNombreEquipoById(tarea.idEquipo)
                             )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                             Text(

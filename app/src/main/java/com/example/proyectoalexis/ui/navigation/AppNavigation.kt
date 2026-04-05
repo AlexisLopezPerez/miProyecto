@@ -252,7 +252,8 @@ fun AppNavigation(){
 
                         DetallesTarea(
                             onGoBack = {navController.popBackStack()},
-                            tarea = tarea
+                            tarea = tarea,
+                            equipoViewModel = equipoViewModel
                         )
                     }
 
