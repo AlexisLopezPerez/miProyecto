@@ -1,5 +1,6 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,15 +71,18 @@ import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
 import kotlinx.coroutines.launch
 import com.example.proyectoalexis.R
+import com.example.proyectoalexis.datos.Tareas
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetallesTarea(
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    tarea: Tareas
 ) {
+    val contexto = LocalContext.current
 
-    val nombreEquipoString = stringResource(R.string.nombreEquipo)
-    val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
+    val nombreTarea = tarea.nombre
+    val descripcionTarea = tarea.descripcion
 
         Scaffold(
             topBar = {
@@ -117,21 +122,22 @@ fun DetallesTarea(
                         Column(modifier = Modifier.padding(10.dp)) {
 
                             Text(
-                                text = "Tarea 1", style = MaterialTheme.typography.titleLarge
+                                text = nombreTarea,
+                                style = MaterialTheme.typography.titleLarge
                             )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                             Text(
                                 text = "Equipo:", style = MaterialTheme.typography.titleLarge
                             )
                             Text(
-                                text = nombreEquipoString
+                                text = nombreTarea //reemplazar por nombre de la tarea
                             )
                             Divider(Modifier.padding(vertical = 10.dp), color = Color.LightGray)
                             Text(
                                 text = "Descripción:", style = MaterialTheme.typography.titleLarge
                             )
                             Text(
-                                text = descripcionEquipoString
+                                text = descripcionTarea
                             )
 
                         }
@@ -147,7 +153,13 @@ fun DetallesTarea(
                             )
                             {
                                 TextButton(
-                                    onClick = {  },
+                                    onClick = {
+                                        Toast.makeText(
+                                            contexto,
+                                            "Funcion no disponible",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    },
                                     modifier = Modifier.widthIn(min = 50.dp, max = 300.dp)
                                 ) 
                                 {
@@ -159,7 +171,13 @@ fun DetallesTarea(
                                     )
                                 }
                                 IconButton(
-                                    onClick = {  }
+                                    onClick = {
+                                        Toast.makeText(
+                                            contexto,
+                                            "Funcion no disponible",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 ) 
                                 {
                                     Icon( 
@@ -182,7 +200,15 @@ fun DetallesTarea(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 TextButton(
-                                    onClick = { },
+                                    onClick = {
+
+                                            Toast.makeText(
+                                                contexto,
+                                                "Funcion no disponible",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                    },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
@@ -201,7 +227,15 @@ fun DetallesTarea(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
                                 TextButton(
-                                    onClick = { },
+                                    onClick = {
+
+                                            Toast.makeText(
+                                                contexto,
+                                                "Funcion no disponible",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                    },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(

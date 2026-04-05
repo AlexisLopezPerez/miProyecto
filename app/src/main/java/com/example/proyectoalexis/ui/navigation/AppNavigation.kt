@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyectoalexis.datos.AppDatabase
 import com.example.proyectoalexis.datos.Equipos
+import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.screens.CrearEquipo
 import com.example.proyectoalexis.ui.screens.CrearTarea
@@ -177,7 +178,9 @@ fun AppNavigation(){
                                         },
                             onCrearTarea = {navController.navigate(Screens.CrearTarea.route)},
                             onEditarTarea = {navController.navigate(Screens.EditarTarea.route)},
-                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
+                            onDetallesTarea = { idTarea ->
+                                navController.navigate(Screens.DetallesTarea.createRoute(idTarea))
+                                              },
                             onDetallesPerfil = {
                                 navController.navigate("detallesPerfil/$idUsuario")
                             },
@@ -241,9 +244,15 @@ fun AppNavigation(){
                         }
                     }
 
-                    composable(route = Screens.DetallesTarea.route){
+                    composable(route = Screens.DetallesTarea.route,
+                            arguments = listOf(navArgument(name = "idTarea") {type = NavType.IntType})
+                    ){ backStackEntry ->
+                        val idTarea = backStackEntry.arguments?.getInt("idTarea")?: 0
+                        val tarea: Tareas = tareasViewModel.getTareaById(idTarea)!!
+
                         DetallesTarea(
-                            onGoBack = {navController.popBackStack()}
+                            onGoBack = {navController.popBackStack()},
+                            tarea = tarea
                         )
                     }
 

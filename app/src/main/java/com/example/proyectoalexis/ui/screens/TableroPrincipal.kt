@@ -90,7 +90,7 @@ fun TableroPrincipal(
     onDetallesPerfil: () -> Unit,
     onLogin: () -> Unit,
     onCrearTarea: () -> Unit,
-    onDetallesTarea: () -> Unit,
+    onDetallesTarea: (Int) -> Unit,
     onEditarTarea: () -> Unit,
     tareasViewModel: tareasViewModel = viewModel(),
     equiposViewModel: equipoViewModel = viewModel()
@@ -188,7 +188,7 @@ fun TableroPrincipal(
                 items(listaTareas){ tarea ->
                     TarjetaTarea(showBottomSheet, tarea, equiposViewModel,
                             onEditarTarea = onEditarTarea,
-                        onDetallesTarea = onDetallesTarea,
+                        onDetallesTarea = { onDetallesTarea(tarea.idTarea) },
                         sheetState = sheetState,
                         showDialog = showDialog,
                         contexto = contexto,

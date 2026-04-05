@@ -7,7 +7,9 @@ sealed class Screens (val route: String){
         fun createRoute(idUsuario: Int) = "tableroPrincipal/$idUsuario"
     }
     data object CrearTarea: Screens("crearTarea")
-    data object DetallesTarea: Screens("detallesTarea")
+    data object DetallesTarea: Screens("detallesTarea/{idTarea}"){
+        fun createRoute(idTarea: Int) = "detallesTarea/$idTarea"
+    }
     data object EditarTarea: Screens("editarTarea")
     data object DetallesPerfil: Screens("detallesPerfil/{idUsuario}"){
         fun createRoute(idUsuario: Int) = "detallesPerfil/$idUsuario"
