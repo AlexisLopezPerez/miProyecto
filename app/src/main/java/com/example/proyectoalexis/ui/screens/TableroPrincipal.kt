@@ -91,7 +91,7 @@ fun TableroPrincipal(
     onLogin: () -> Unit,
     onCrearTarea: () -> Unit,
     onDetallesTarea: (Int) -> Unit,
-    onEditarTarea: () -> Unit,
+    onEditarTarea: (Int) -> Unit,
     tareasViewModel: tareasViewModel = viewModel(),
     equiposViewModel: equipoViewModel = viewModel()
 ) {
@@ -206,7 +206,7 @@ fun TableroPrincipal(
     fun TarjetaTarea(showBottomSheet: MutableState<Boolean>,
                      tarea: Tareas, equipoViewModel: equipoViewModel,
                      sheetState: SheetState,
-                     onEditarTarea: () -> Unit,
+                     onEditarTarea: (Int) -> Unit,
                      onDetallesTarea: () -> Unit,
                      showDialog: MutableState<Boolean>,
                      contexto: Context,
@@ -337,7 +337,7 @@ private fun MostrarMenu(
     sheetState: SheetState,
     showBottomSheet: MutableState<Boolean>,
     onDetallesTarea: () -> Unit,
-    onEditarTarea: () -> Unit,
+    onEditarTarea: (Int) -> Unit,
     showDialog: MutableState<Boolean>,
     contexto: Context,
     tareasViewModel: tareasViewModel,
@@ -365,7 +365,7 @@ private fun MostrarMenu(
                 }
             }
             TextButton(
-                onClick = onEditarTarea
+                onClick = { onEditarTarea(tarea.idTarea) }
             )
             {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,

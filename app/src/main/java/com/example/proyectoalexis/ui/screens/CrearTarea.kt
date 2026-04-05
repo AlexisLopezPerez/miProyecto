@@ -260,11 +260,14 @@ fun CrearTarea(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarEquipos(showBottomSheet: MutableState<Boolean>, sheetState: SheetState,
-                   listaEquipos: List<Equipos>,
-                   idEquipo: MutableState<Int>,
-                   nombreEquipo: MutableState<String>
-                   ){
+private fun MostrarEquipos(
+                    showBottomSheet: MutableState<Boolean>,
+                    sheetState: SheetState,
+                    listaEquipos: List<Equipos>,
+                    idEquipo: MutableState<Int>,
+                    nombreEquipo: MutableState<String>
+                    )
+{
     ModalBottomSheet(
         modifier = Modifier.fillMaxHeight(),
         sheetState = sheetState,

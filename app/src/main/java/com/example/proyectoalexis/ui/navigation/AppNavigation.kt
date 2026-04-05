@@ -177,7 +177,9 @@ fun AppNavigation(){
                                 navController.navigate(Screens.Equipos.createRoute(idUsuario))
                                         },
                             onCrearTarea = {navController.navigate(Screens.CrearTarea.route)},
-                            onEditarTarea = {navController.navigate(Screens.EditarTarea.route)},
+                            onEditarTarea = { idTarea ->
+                                navController.navigate(Screens.EditarTarea.createRoute(idTarea))
+                                            },
                             onDetallesTarea = { idTarea ->
                                 navController.navigate(Screens.DetallesTarea.createRoute(idTarea))
                                               },
@@ -291,10 +293,16 @@ fun AppNavigation(){
                         }
                     }
 
-                    composable(route = Screens.EditarTarea.route){
+                    composable(route = Screens.EditarTarea.route,
+                        arguments = listOf(navArgument(name = "idTarea") {type = NavType.IntType})
+                    ){ backStackEntry ->
+                        val idTarea = backStackEntry.arguments?.getInt("idTarea")?: 0
+                        val tarea: Tareas = tareasViewModel.getTareaById(idTarea)!!
                         EditarTarea(
                             onGoBack = {navController.popBackStack()},
-                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)}
+                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
+                            tarea = tarea,
+                            equipoViewModel = equipoViewModel
                         )
                     }
 

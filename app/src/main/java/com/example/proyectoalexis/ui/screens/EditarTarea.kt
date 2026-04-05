@@ -1,20 +1,26 @@
 package com.example.proyectoalexis.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Contacts
@@ -33,16 +39,21 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,28 +62,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.proyectoalexis.R
-import com.example.proyectoalexis.ui.navigation.Screens
+import com.example.proyectoalexis.datos.Equipos
+import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.ui.theme.ProyectoALexisTheme
+import com.example.proyectoalexis.viewModel.equipoViewModel
 import kotlinx.coroutines.launch
+import kotlin.Boolean
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarTarea(
     onGoBack: () -> Unit,
-    onDetallesTarea: () -> Unit
+    onDetallesTarea: () -> Unit,
+    tarea: Tareas,
+    equipoViewModel: equipoViewModel  = viewModel()
 ) {
 
-    val descripcionEquipoString = stringResource(R.string.descripcionEquipo)
-    val equipoTareaString = stringResource(R.string.nombreEquipo)
-    var nombreTarea by remember { mutableStateOf("Tarea 1") }
-    var descripcionTarea by remember { mutableStateOf(descripcionEquipoString) }
-    var equipoTarea by remember { mutableStateOf(equipoTareaString) }
+    val contexto = LocalContext.current
+    var showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+
+    var nombreTarea by remember { mutableStateOf(tarea.nombre) }
+    var descripcionTarea by remember { mutableStateOf(tarea.descripcion) }
+    var idEquipo = remember { mutableStateOf(tarea.idEquipo) }
+    var nombreEquipo = remember { mutableStateOf(equipoViewModel.getNombreEquipoById(idEquipo.value)) }
+
+    val listaEquipos by equipoViewModel.listaDeEquipos.collectAsState(initial = emptyList())
 
 
     Scaffold(
@@ -112,12 +139,6 @@ fun EditarTarea(
                     onValueChange = { nombreTarea = it },
                     label = { Text("Nombre de la tarea") }
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-                OutlinedTextField(
-                    value = equipoTarea,
-                    onValueChange = { equipoTarea = it },
-                    label = { Text("Equipo") }
-                )
                 Spacer(Modifier.height(20.dp))
                 OutlinedTextField(
                     value = descripcionTarea,
@@ -132,10 +153,39 @@ fun EditarTarea(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
+                        ){
+                            TextButton(
+                                onClick = {
+                                    showBottomSheet.value = true
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Equipo Asignado: ${nombreEquipo.value}"
+                                )
+                            }
+
+                        }
+                    }
+                }
+                Spacer(Modifier.height(20.dp))
+                Card()
+                {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         )
                         {
                             TextButton(
-                                onClick = { },
+                                onClick = {
+                                    Toast.makeText(
+                                        contexto,
+                                        "Funcion pendiente",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
                                 modifier = Modifier.widthIn(min = 50.dp, max = 300.dp)
                             )
                             {
@@ -147,7 +197,13 @@ fun EditarTarea(
                                 )
                             }
                             IconButton(
-                                onClick = {  }
+                                onClick = {
+                                    Toast.makeText(
+                                        contexto,
+                                        "Funcion pendiente",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             )
                             {
                                 Icon(
@@ -170,7 +226,13 @@ fun EditarTarea(
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             TextButton(
-                                onClick = {  },
+                                onClick = {
+                                    Toast.makeText(
+                                        contexto,
+                                        "Funcion pendiente",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
@@ -192,7 +254,7 @@ fun EditarTarea(
                 )
                 {
                     Button(
-                        onClick = onDetallesTarea,
+                        onClick = onGoBack,
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
@@ -202,7 +264,78 @@ fun EditarTarea(
                     ) {
                         Text("Aceptar")
                     }
+                    if (showBottomSheet.value) {
+                        MostrarEquipo(
+                            sheetState = sheetState,
+                            showBottomSheet = showBottomSheet,
+                            listaEquipos = listaEquipos,
+                            idEquipo = idEquipo,
+                            nombreEquipo = nombreEquipo
+                        )
+                    }
+                }
+            }
 
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MostrarEquipo(showBottomSheet: MutableState<Boolean>, sheetState: SheetState,
+                   listaEquipos: List<Equipos>,
+                   idEquipo: MutableState<Int>,
+                   nombreEquipo: MutableState<String>
+){
+    ModalBottomSheet(
+        modifier = Modifier.fillMaxHeight(),
+        sheetState = sheetState,
+        onDismissRequest = { showBottomSheet.value = false }
+    )
+    {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            items(listaEquipos) { equipo ->
+                Row(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AsyncImage(
+                            model = equipo.imagenUri,
+                            contentDescription = equipo.nombre,
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(60.dp),
+                            contentScale = ContentScale.Crop,
+                            onError = { error ->
+                                Log.e(
+                                    "Editar Tarea, ${equipo.nombre}",
+                                    "Error al cargar ${error.result.throwable}"
+                                )
+                            }
+                        )
+                        Text(text = equipo.nombre, modifier = Modifier.padding(horizontal = 10.dp))
+                    }
+                    Button(
+                        onClick = {
+                            idEquipo.value = equipo.idEquipo
+                            nombreEquipo.value = equipo.nombre
+                            showBottomSheet.value = false
+                        },
+                        enabled = idEquipo.value != equipo.idEquipo
+                    )
+                    {
+                        Icon(imageVector = Icons.Filled.Add, "")
+                    }
                 }
             }
         }
