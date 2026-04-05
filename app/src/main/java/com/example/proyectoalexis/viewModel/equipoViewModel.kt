@@ -22,7 +22,7 @@ class equipoViewModel(private val equipoDAO: EquiposDAO, private val contexto: C
     return listaDeEquipos.value.find { it.idEquipo == idEquipo }
     }
 
-    fun getNombreEquipoById(idEquipo: Int): String?{
+    fun getNombreEquipoById(idEquipo: Int): String{
         val equipo = listaDeEquipos.value.find { it.idEquipo == idEquipo }
         return equipo?.nombre?:"Not found"
     }

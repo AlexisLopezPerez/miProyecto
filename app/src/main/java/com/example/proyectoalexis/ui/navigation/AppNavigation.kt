@@ -303,7 +303,11 @@ fun AppNavigation(){
                     composable(route = Screens.CrearTarea.route){
                         CrearTarea(
                             onGoBack = {navController.popBackStack()},
-                            onTableroPrincipal = {navController.navigate(Screens.TableroPrincipal.route)}
+                            onCrearTarea = { tarea ->
+                                tareasViewModel.crearTarea(tarea)
+                                navController.popBackStack()
+                            },
+                            equipoViewModel = equipoViewModel
                         )
                     }
 

@@ -281,7 +281,7 @@ fun TableroPrincipal(
                     }
                     Spacer(Modifier.height(10.dp))
                     Text(
-                        text = equipoViewModel.getNombreEquipoById(tarea.idEquipo).toString(),
+                        text = equipoViewModel.getNombreEquipoById(tarea.idEquipo),
                         modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
                     )
                     Spacer(Modifier.height(10.dp))
