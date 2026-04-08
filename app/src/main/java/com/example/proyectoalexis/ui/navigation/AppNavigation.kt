@@ -168,7 +168,7 @@ fun AppNavigation(){
                         arguments = listOf(navArgument(name = "idUsuario") {type = NavType.IntType})
                     ) { backStakeEntry ->
                         val idUsuario = backStakeEntry.arguments?.getInt("idUsuario")?: 0
-                        val usuarioActual = usuarioViewModel.getUsuarioById(idUsuario)
+                        val usuarioActual = usuarioViewModel.getUsuarioById(idUsuario)!!
 
                         TableroPrincipal(
                             onLogin = {navController.navigate(Screens.Login.route)},
@@ -187,7 +187,8 @@ fun AppNavigation(){
                                 navController.navigate("detallesPerfil/$idUsuario")
                             },
                             tareasViewModel = tareasViewModel,
-                            equiposViewModel = equipoViewModel
+                            equiposViewModel = equipoViewModel,
+                            usuarioActual = usuarioActual
                         )
                     }
 
@@ -300,7 +301,10 @@ fun AppNavigation(){
                         val tarea: Tareas = tareasViewModel.getTareaById(idTarea)!!
                         EditarTarea(
                             onGoBack = {navController.popBackStack()},
-                            onDetallesTarea = {navController.navigate(Screens.DetallesTarea.route)},
+                            onActualizarTarea = { tarea ->
+                                tareasViewModel.actualizarTarea(tarea)
+                                navController.navigate(Screens.DetallesTarea.createRoute(tarea.idTarea))
+                            },
                             tarea = tarea,
                             equipoViewModel = equipoViewModel
                         )

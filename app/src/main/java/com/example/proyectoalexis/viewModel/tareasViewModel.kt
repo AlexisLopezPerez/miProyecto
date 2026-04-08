@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.TareasDAO
 import com.example.proyectoalexis.datos.datosIniciales.DatosTareas
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,6 +18,10 @@ class tareasViewModel(private val tareasDAO: TareasDAO, private val contexto: Co
         started = SharingStarted.Eagerly,
         initialValue = emptyList<Tareas>()
     )
+
+    fun getTareasByIdEquipo(idEquipo: Int): Flow<List<Tareas>> {
+        return getTareasByIdEquipo(idEquipo)
+    }
 
     fun getTareaById(idTarea: Int): Tareas?{
         return listaDeTareas.value.find { it.idTarea == idTarea }

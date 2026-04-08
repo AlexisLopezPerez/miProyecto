@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Logout
@@ -93,7 +94,8 @@ fun TableroPrincipal(
     onDetallesTarea: (Int) -> Unit,
     onEditarTarea: (Int) -> Unit,
     tareasViewModel: tareasViewModel = viewModel(),
-    equiposViewModel: equipoViewModel = viewModel()
+    equiposViewModel: equipoViewModel = viewModel(),
+    usuarioActual: Usuarios
 ) {
 
     val contexto = LocalContext.current
@@ -261,10 +263,9 @@ fun TableroPrincipal(
                             text = tarea.descripcion,
                             modifier = Modifier.widthIn(min = 30.dp, max = 300.dp)
                         )
-                        Checkbox(
-                            checked = checked,
-                            onCheckedChange = { checked = it }
-                        )
+                        IconButton(
+                            onClick = {tareasViewModel.eliminarTarea(tarea)}
+                        ) { Icon(imageVector = Icons.Filled.Check, contentDescription = null) }
                     }
                 }
 
@@ -282,6 +283,7 @@ fun TableroPrincipal(
                 tareasViewModel = tareasViewModel
             )
         }
+
     }
 
 @Composable

@@ -13,6 +13,11 @@ interface TareasDAO {
     @Query("SELECT * FROM tareas")
     fun getAllTareas(): Flow<List<Tareas>>
 
+    @Query("""
+        SELECT * FROM tareas WHERE idEquipo = :idEquipo  
+    """)
+    fun getTareasByIdEquipo(idEquipo: Int): Flow<List<Tareas>>
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(tareas: Tareas)
 

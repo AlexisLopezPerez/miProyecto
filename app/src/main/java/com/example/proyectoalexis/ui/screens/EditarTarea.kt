@@ -83,7 +83,7 @@ import kotlin.Boolean
 @Composable
 fun EditarTarea(
     onGoBack: () -> Unit,
-    onDetallesTarea: () -> Unit,
+    onActualizarTarea: (Tareas) -> Unit,
     tarea: Tareas,
     equipoViewModel: equipoViewModel  = viewModel()
 ) {
@@ -254,7 +254,12 @@ fun EditarTarea(
                 )
                 {
                     Button(
-                        onClick = onGoBack,
+                        onClick = {
+                            val tareaActualizada = tarea.copy(nombre = nombreTarea,
+                                descripcion = descripcionTarea,
+                                idEquipo = idEquipo.value)
+                            onActualizarTarea(tareaActualizada)
+                        },
                         colors = ButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White,
