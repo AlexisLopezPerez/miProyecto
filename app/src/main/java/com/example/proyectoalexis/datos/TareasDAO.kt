@@ -18,6 +18,10 @@ interface TareasDAO {
     """)
     fun getTareasByIdEquipo(idEquipo: Int): Flow<List<Tareas>>
 
+    @Query("""
+        SELECT * FROM tareas WHERE idEquipo in (:ids)
+    """)
+    fun getTareasByUsuario(ids: List<Int>): Flow<List<Tareas>>
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(tareas: Tareas)
 

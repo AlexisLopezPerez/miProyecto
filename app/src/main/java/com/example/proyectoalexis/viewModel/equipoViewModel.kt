@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.Equipos
 import com.example.proyectoalexis.datos.EquiposDAO
 import com.example.proyectoalexis.datos.datosIniciales.DatosEquipos
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ class equipoViewModel(private val equipoDAO: EquiposDAO, private val contexto: C
     fun getEquipoById(idEquipo: Int): Equipos?{
     return listaDeEquipos.value.find { it.idEquipo == idEquipo }
     }
+
 
     fun getNombreEquipoById(idEquipo: Int): String{
         val equipo = listaDeEquipos.value.find { it.idEquipo == idEquipo }

@@ -13,8 +13,8 @@ interface IntegrantesDAO {
     @Query("SELECT * FROM integrantesEquipo")
     fun getAllIntegrantes(): Flow<List<IntegrantesEquipo>>
 
-    /*@Query("SELECT * FROM usuarios WHERE idUsuario = :idUsuario")
-    fun getUsuarioById(idUsuario: Int): Usuarios?*/
+    @Query("SELECT idEquipo FROM integrantesEquipo WHERE idUsuario = :idUsuario")
+    fun getEquiposByUsuario(idUsuario: Int): Flow<List<Int>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(integrante: IntegrantesEquipo)

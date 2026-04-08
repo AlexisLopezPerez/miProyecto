@@ -75,12 +75,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyectoalexis.R
 import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.ui.navigation.Screens
 import com.example.proyectoalexis.viewModel.equipoViewModel
+import com.example.proyectoalexis.viewModel.integrantesViewModel
 import com.example.proyectoalexis.viewModel.tareasViewModel
 import kotlinx.coroutines.launch
 
@@ -95,6 +97,7 @@ fun TableroPrincipal(
     onEditarTarea: (Int) -> Unit,
     tareasViewModel: tareasViewModel = viewModel(),
     equiposViewModel: equipoViewModel = viewModel(),
+    integrantesViewModel: integrantesViewModel = viewModel(),
     usuarioActual: Usuarios
 ) {
 
@@ -107,7 +110,11 @@ fun TableroPrincipal(
         skipPartiallyExpanded = false
     )
 
-    val listaTareas by tareasViewModel.listaDeTareas.collectAsState(initial = emptyList())
+    val equiposIdsDelUsuario by integrantesViewModel.getEquiposALosQuePerteneceElUsuario(usuarioActual.idUsuario).collectAsStateWithLifecycle(initialValue = emptyList())
+
+    val listaTareas by tareasViewModel.getTareasPorUsuario(equiposIdsDelUsuario).collectAsStateWithLifecycle(initialValue = emptyList())
+
+    //val listaTareas by tareasViewModel.listaDeTareas.collectAsState(initial = emptyList())
 
     ModalNavigationDrawer(
         drawerState = drawerState,

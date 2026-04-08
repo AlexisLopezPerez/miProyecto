@@ -1,7 +1,9 @@
 package com.example.proyectoalexis.viewModel
 
 import android.content.Context
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.example.proyectoalexis.datos.Tareas
 import com.example.proyectoalexis.datos.TareasDAO
@@ -21,6 +23,10 @@ class tareasViewModel(private val tareasDAO: TareasDAO, private val contexto: Co
 
     fun getTareasByIdEquipo(idEquipo: Int): Flow<List<Tareas>> {
         return getTareasByIdEquipo(idEquipo)
+    }
+
+    fun getTareasPorUsuario(listaIds: List<Int>): Flow<List<Tareas>>{
+        return tareasDAO.getTareasByUsuario(listaIds)
     }
 
     fun getTareaById(idTarea: Int): Tareas?{

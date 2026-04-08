@@ -8,6 +8,7 @@ import com.example.proyectoalexis.datos.IntegrantesDAO
 import com.example.proyectoalexis.datos.IntegrantesEquipo
 import com.example.proyectoalexis.datos.Usuarios
 import com.example.proyectoalexis.datos.datosIniciales.DatosIntegrantes
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -26,6 +27,10 @@ class integrantesViewModel(private val integrantesDAO: IntegrantesDAO,
         return listaDeIntegrantes.value.find {
             it.idInnecesario == idInnecesario
         }
+    }
+
+    fun getEquiposALosQuePerteneceElUsuario(idUsuario: Int): Flow<List<Int>>{
+        return integrantesDAO.getEquiposByUsuario(idUsuario)
     }
 
     fun getIntegranteByIdEquipoAndIdUsuario(idEquipo: Int, idUsuario: Int): IntegrantesEquipo?{

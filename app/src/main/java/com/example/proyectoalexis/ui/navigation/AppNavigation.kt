@@ -188,7 +188,8 @@ fun AppNavigation(){
                             },
                             tareasViewModel = tareasViewModel,
                             equiposViewModel = equipoViewModel,
-                            usuarioActual = usuarioActual
+                            usuarioActual = usuarioActual,
+                            integrantesViewModel = integrantesViewModel
                         )
                     }
 
